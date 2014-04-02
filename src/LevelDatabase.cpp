@@ -2,6 +2,7 @@
 #include "LevelDatabaseLayer.h"
 #include "LevelDatabaseTransaction.h"
 #include "LevelDatabaseIterator.h"
+
 #include <assert.h>
 
 using std::string;

@@ -33,8 +33,8 @@ bool LevelDatabaseIterator::next()
 {   
     if (!m_isValid) {
         return false;
-    }
-    
+    }   
+
     it->Next();
     
     if (it->Valid()) {
