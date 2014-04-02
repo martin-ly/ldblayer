@@ -2,7 +2,7 @@
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(LayerDatabase, LayerRaw, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, LayerRaw, ::testing::Values(no_keys, one_key, simple_keys));
 
 // simple database operations
 void LayerRaw::simpleUpload(LevelDatabaseAbstract* db, keyval values) 
@@ -12,20 +12,24 @@ void LayerRaw::simpleUpload(LevelDatabaseAbstract* db, keyval values)
     }
 }
 
-void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db)
+void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, bool expect)
 {
     keyval values = GetParam();
     
-    simpleCheckData(db, values);
+    simpleCheckData(db, values, expect);
 }
 
-void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, const keyval& values) 
+void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, const keyval& values, bool expect) 
 {
     for (auto row: values) {
         string value;
-        EXPECT_TRUE(db->Get(row.first, &value).ok());
-        
-        EXPECT_EQ(row.second, value) << "Not found in database value: " << row.first << " - actual found: " << value;
+		
+		if (expect) {
+			EXPECT_TRUE(db->Get(row.first, &value).ok());        
+			EXPECT_EQ(row.second, value) << "Not found in database value: " << row.first << " - actual found: " << value;
+		} else {
+			EXPECT_FALSE(db->Get(row.first, &value).ok());
+		}
     }
 }
 

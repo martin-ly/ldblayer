@@ -6,11 +6,10 @@
 class LevelDatabase;
 class LevelDatabaseLayer;
 
-
 class LevelDatabaseIterator
 {
 public:
-    LevelDatabaseIterator(leveldb::Iterator* iterator, LevelDatabaseLayer* layout = nullptr);
+	LevelDatabaseIterator(LevelDatabase* db, LevelDatabaseLayer* layout = nullptr);
     ~LevelDatabaseIterator();
     
     bool seekToFirst();
@@ -21,13 +20,15 @@ public:
     bool isValid() const noexcept { return m_isValid; }
     
     std::string operator* () const { return value(); }
-    std::string key() const  { return it->key().ToString(); }
-    std::string value() const { return it->value().ToString(); } 
+    std::string key() const;
+    std::string value() const;
+    void setLayout(LevelDatabaseLayer* layout) { activeLayout = layout; }    
     
+    void reopen();
 private:    
-    leveldb::Iterator* it;
-    LevelDatabase* database;
-    LevelDatabaseLayer* activeLayout;
+	LevelDatabase* database;
+	LevelDatabaseLayer* activeLayout;
+    leveldb::Iterator* it;    
     bool m_isValid;
 };
 

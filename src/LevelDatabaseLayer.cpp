@@ -1,5 +1,7 @@
 #include "LevelDatabaseLayer.h"
 #include "LevelDatabase.h"
+#include "LevelDatabaseTransaction.h"
+#include "LevelDatabaseIterator.h"
 
 using std::string;
 
@@ -11,12 +13,15 @@ LevelDatabaseLayer::LevelDatabaseLayer()
 LevelDatabaseLayer::LevelDatabaseLayer(LevelDatabase* levelDatabase, const std::string& layerName)
 : m_db(levelDatabase), prefix(layerName)
 {
+	m_db->registerPrefix(prefix);
 }
 
 void LevelDatabaseLayer::open(LevelDatabase* levelDatabase, const std::string& layerName)  noexcept
 {
     m_db = levelDatabase;
     prefix = layerName;
+	
+	m_db->registerPrefix(prefix);
 }
 
 void LevelDatabaseLayer::close()
@@ -44,4 +49,19 @@ leveldb::Status LevelDatabaseLayer::Del(const std::string& key)
     assert(m_db);
     string get_key = prefix + key;
     return m_db->Del(key);
+}
+
+LevelDatabaseTransaction LevelDatabaseLayer::createTransaction() 
+{
+	return LevelDatabaseTransaction(m_db, this);
+}
+
+LevelDatabaseIterator LevelDatabaseLayer::createIterator()
+{
+	assert(m_db);
+	
+	LevelDatabaseIterator iterator = m_db->createIterator();
+	iterator.setLayout(this);	
+	
+	return iterator;
 }

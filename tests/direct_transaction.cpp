@@ -2,9 +2,9 @@
 #include "LevelDatabaseTransaction.h"
 
 using namespace test;
-INSTANTIATE_TEST_CASE_P(DirectDatabase, TransactionOperations, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, Transaction, ::testing::Values(no_keys, one_key, simple_keys));
 
-void TransactionOperations::transactionUpload()
+void Transaction::transactionUpload()
 {
     LevelDatabaseTransaction transaction = db.createTransaction();
     keyval values = GetParam();
@@ -15,13 +15,13 @@ void TransactionOperations::transactionUpload()
     EXPECT_TRUE(transaction.commit().ok());
 }
 
-TEST_P(TransactionOperations, put) 
+TEST_P(Transaction, put) 
 {    
     transactionUpload();    
     simpleCheckData();
 }
 
-TEST_P(TransactionOperations, del) 
+TEST_P(Transaction, del) 
 {
     transactionUpload();
     

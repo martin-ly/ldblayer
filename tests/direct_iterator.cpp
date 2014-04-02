@@ -4,13 +4,13 @@
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(DirectDatabase, IteratorsOperations, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, Iterator, ::testing::Values(no_keys, one_key, simple_keys));
 
-TEST_P(IteratorsOperations, iterator_first)
+TEST_P(Iterator, seek_to_first)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator(nullptr);
+    LevelDatabaseIterator iterator = db.createIterator();
     
     keyval values = GetParam();
     
@@ -21,11 +21,11 @@ TEST_P(IteratorsOperations, iterator_first)
     }
 }
 
-TEST_P(IteratorsOperations, iterator_last)
+TEST_P(Iterator, seek_to_last)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator(nullptr);
+    LevelDatabaseIterator iterator = db.createIterator();
     
     keyval values = GetParam();    
     if (!values.empty()) {
@@ -35,11 +35,11 @@ TEST_P(IteratorsOperations, iterator_last)
     }
 }
 
-TEST_P(IteratorsOperations, iterator_seek)
+TEST_P(Iterator, seek)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator(nullptr);
+    LevelDatabaseIterator iterator = db.createIterator();
     
     keyval values = GetParam();
    
@@ -58,15 +58,21 @@ TEST_P(IteratorsOperations, iterator_seek)
     EXPECT_EQ(iterator.key(), "key_a");
     EXPECT_EQ(iterator.value(), "data_a");
     
-    // seek no exist key, that should lexicography be the last
-    EXPECT_FALSE(iterator.seek("zzzzzzzzzzzzz")) << "leveldb found: " << iterator.key() << " - " << iterator.value();    
+	// seek non exist key that lexicography should be the last
+	EXPECT_FALSE(iterator.seek("zzzzzzzzzzzzz"));
+	EXPECT_FALSE(iterator.isValid());
+	
+	// seek non exist key that lexicography exist
+	EXPECT_TRUE(iterator.seek("a_ke"));
+	EXPECT_TRUE(iterator.isValid());
+	EXPECT_EQ(iterator.key(), "key_a");
 }
 
-TEST_P(IteratorsOperations, iterator_next) 
+TEST_P(Iterator, iterator_next) 
 {
     transactionUpload();
     
-    LevelDatabaseIterator db_iterator = db.createIterator(nullptr);
+    LevelDatabaseIterator db_iterator = db.createIterator();
     
     keyval values = GetParam();
     

@@ -57,11 +57,15 @@ leveldb::Status LevelDatabase::Get(const string& key, std::string* value)
 }
 
 LevelDatabaseLayer LevelDatabase::getLayer(const std::string& layerName) 
-{
-    layers.insert(layerName);
-    
+{    
     LevelDatabaseLayer layer(this, layerName);
+	registerPrefix(layer.getPrefix());
     return layer;
+}
+
+void LevelDatabase::registerPrefix(const std::string& prefix) 
+{	
+	prefixs.insert(prefix);
 }
 
 leveldb::Status LevelDatabase::Write(leveldb::WriteBatch* batch) 
@@ -76,13 +80,17 @@ LevelDatabaseTransaction LevelDatabase::createTransaction()
     return LevelDatabaseTransaction(this);
 }
 
-LevelDatabaseIterator LevelDatabase::createIterator(LevelDatabaseLayer* layout)
+LevelDatabaseIterator LevelDatabase::createIterator()
 {
     assert(db);
-    
-    leveldb::Iterator* it = db->NewIterator(readOptions);    
-    
-    return LevelDatabaseIterator(it, layout);
+    return LevelDatabaseIterator(this);
+}
+
+leveldb::Iterator* LevelDatabase::createRawIterator() 
+{
+	assert(db);
+	leveldb::Iterator* it = db->NewIterator(readOptions);
+	return it;
 }
 
 leveldb::Status LevelDatabase::destroy() 

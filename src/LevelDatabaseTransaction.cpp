@@ -21,7 +21,7 @@ void LevelDatabaseTransaction::Put(const std::string& key, const std::string& va
     }
     
     put_key += key;
-    writeBatch.Put(put_key, value);    
+    writeBatch.Put(put_key, value);	
 }
 
 void LevelDatabaseTransaction::Delete(const std::string& key)

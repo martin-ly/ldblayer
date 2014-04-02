@@ -37,13 +37,13 @@ protected:
     void simpleCheckData(const keyval& keyval);
 };
 
-class TransactionOperations : public RawDatabasaOperations 
+class Transaction : public RawDatabasaOperations 
 {
 protected:
     void transactionUpload();
 };
 
-class IteratorsOperations : public TransactionOperations 
+class Iterator : public Transaction 
 {
 };
 

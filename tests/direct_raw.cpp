@@ -2,7 +2,7 @@
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(DirectDatabase, RawDatabasaOperations, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, RawDatabasaOperations, ::testing::Values(no_keys, one_key, simple_keys));
 
 // simple database operations
 void RawDatabasaOperations::simpleUpload() 

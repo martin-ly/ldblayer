@@ -6,13 +6,12 @@
 #include "LevelDatabaseAbstract.h"
 
 class LevelDatabaseLayer;
-class LevelDatabaseTransaction;
 class LevelDatabaseIterator;
 
 class LevelDatabase : public LevelDatabaseAbstract
 {     
 public:
-    using layer_t = std::set<std::string>;
+    using prefix_list_t = std::set<std::string>;
     
     LevelDatabase() noexcept;
     LevelDatabase(const leveldb::Options& options, const std::string& path);
@@ -29,13 +28,17 @@ public:
     leveldb::Status Write(leveldb::WriteBatch* batch);    
     
     LevelDatabaseLayer getLayer(const std::string& layerName);
-    LevelDatabaseTransaction createTransaction();
-    LevelDatabaseIterator createIterator(LevelDatabaseLayer* layout);
-    const layer_t& getAllLayouts() const noexcept { return layers; }
+	void registerPrefix(const std::string& layer);
+    
+	virtual LevelDatabaseTransaction createTransaction();
+    virtual LevelDatabaseIterator createIterator();
+	
+	leveldb::Iterator* createRawIterator();
+	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }
     
     leveldb::Status destroy();   
     
-    leveldb::DB* getDb() noexcept { return db; }
+    leveldb::DB* getDb() noexcept { return db; }        
 
 private:
     leveldb::DB* db;
@@ -44,7 +47,7 @@ private:
     
     std::string path;
     
-    layer_t layers;
+	prefix_list_t prefixs;
 };
 
 #endif

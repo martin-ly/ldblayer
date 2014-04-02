@@ -11,6 +11,7 @@ set(ldb_tests_SRCS_CXX
     layer_db.cpp
     layer_raw.cpp
     layer_transaction.cpp
+    layer_iterator.cpp
 )
 
 # .h headers

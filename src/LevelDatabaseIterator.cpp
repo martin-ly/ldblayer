@@ -8,11 +8,13 @@ inline bool startsWith(const std::string& prefix, const std::string& toCheck)
     return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();    
 }
 
-LevelDatabaseIterator::LevelDatabaseIterator(leveldb::Iterator* iterator, LevelDatabaseLayer* layout)
-: it(iterator),
+LevelDatabaseIterator::LevelDatabaseIterator(LevelDatabase* db, LevelDatabaseLayer* layout)
+: database(db),
   activeLayout(layout),
   m_isValid (false)
-{
+{	
+	it = db->createRawIterator();	
+	
     /*leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
         cout << it->key().ToString() << ": "  << it->value().ToString() << endl;
@@ -75,6 +77,10 @@ bool LevelDatabaseIterator::seekToFirst()
 {
     if (activeLayout) {
         it->Seek(activeLayout->getPrefix());
+		
+		if (!(m_isValid = it->Valid())) 
+			return false;
+		
         const std::string key = it->key().ToString();
         if (activeLayout) {
             if (startsWith(activeLayout->getPrefix(), key)) {
@@ -93,29 +99,47 @@ bool LevelDatabaseIterator::seekToFirst()
 bool LevelDatabaseIterator::seekToLast() 
 {
     if (activeLayout) {
-        LevelDatabase::layer_t layers = activeLayout->db()->getAllLayouts();   
-        auto iter = layers.find(activeLayout->getPrefix());
+        LevelDatabase::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
+		auto iter = prefixes.find(activeLayout->getPrefix());
         
         // database should contain current active layout.
         // if not -> than it is bug and this object was created outside of this database
-        assert (iter != layers.end());
+		assert (iter != prefixes.end());
         
         // get next database prefix
         ++iter;
         
-        // this is next prefix, so navigate to last element
-        if (iter != layers.end()) {
-            it->Seek(*iter);
+        // check if current prefix is at the end of database
+		if (iter != prefixes.end()) {
+			const std::string searchPrefix = *iter;
+            it->Seek(searchPrefix);
         } else {
+			// current prefix are last, so just navigate to last key;
             it->SeekToLast();
+			if (!it->Valid())
+				return m_isValid = false;
+			
+			const std::string& key = it->key().ToString();
+			return m_isValid = startsWith(activeLayout->getPrefix(), key);
         }
         
-        if (it->Valid()) {                
-            // check, if this key belongs to current layout.
-            // SeekToLast can return key from prev. layout, if this layout doesn't contain any data
-            const std::string& key = it->key().ToString();
-            return m_isValid = startsWith(activeLayout->getPrefix(), key);
-        }        
+        if (it->Valid()) {	// we found first key of next database. So, point iter to prev. key
+			it->Prev();
+			
+			if (!it->Valid()) {	// no prev. key, so no data
+				return (m_isValid = false);
+			}			
+		} else {	// we have no keys for next database, so just navigate to last database key
+			it->SeekToLast();			
+		}
+		
+		if (it->Valid()) {
+			// check, if this key belongs to current layout.
+			// SeekToLast can return key from prev. layout, if this layout doesn't contain any data
+			const std::string& key = it->key().ToString();
+			return m_isValid = startsWith(activeLayout->getPrefix(), key);
+		}
+		
     } else {   
         it->SeekToLast();
         return m_isValid = it->Valid();
@@ -145,4 +169,41 @@ bool LevelDatabaseIterator::seek(const std::string& key)
     }
     
     return m_isValid = false;
+}
+
+std::string LevelDatabaseIterator::key() const { 
+	std::string key;
+	
+	if (m_isValid) {
+		assert(it->Valid());		
+		if (activeLayout) {
+			std::string ldb_key = it->key().ToString();
+			key.reserve(ldb_key.size() - activeLayout->getPrefix().size());
+			
+			std::copy(ldb_key.begin() + activeLayout->getPrefix().size(), ldb_key.end(), std::back_inserter(key));
+		} else {
+			key = it->key().ToString();
+		}
+	}
+	
+	return key;
+}
+
+std::string LevelDatabaseIterator::value() const 
+{ 
+	std::string value;
+	if (m_isValid) {
+		assert(it->Valid());
+		value = it->value().ToString();
+	}
+	
+	return value;
+}
+
+void LevelDatabaseIterator::reopen() 
+{
+	if (it) 
+		delete it;
+	
+	it = database->createRawIterator();
 }
