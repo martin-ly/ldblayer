@@ -2,24 +2,24 @@
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(LayerDatabase, LayerDatabase, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(LayerDatabase, LayerRaw, ::testing::Values(no_keys, one_key, simple_keys));
 
 // simple database operations
-void LayerDatabase::simpleUpload(LevelDatabaseAbstract* db, keyval values) 
+void LayerRaw::simpleUpload(LevelDatabaseAbstract* db, keyval values) 
 {    
     for (auto i = values.rbegin(); i != values.rend(); i++) {
         EXPECT_TRUE(db->Put(i->first, i->second).ok());    
     }
 }
 
-void LayerDatabase::simpleCheckData(LevelDatabaseAbstract* db)
+void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db)
 {
     keyval values = GetParam();
     
     simpleCheckData(db, values);
 }
 
-void LayerDatabase::simpleCheckData(LevelDatabaseAbstract* db, const keyval& values) 
+void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, const keyval& values) 
 {
     for (auto row: values) {
         string value;
@@ -30,13 +30,13 @@ void LayerDatabase::simpleCheckData(LevelDatabaseAbstract* db, const keyval& val
 }
 
 
-TEST_P(LayerDatabase, put) 
+TEST_P(LayerRaw, put) 
 {   
     keyval values = GetParam();
     simpleUpload(&db1, values);
 }
 
-TEST_P(LayerDatabase, get) 
+TEST_P(LayerRaw, get) 
 {
     keyval values = GetParam();
     
@@ -68,7 +68,7 @@ TEST_P(LayerDatabase, get)
 }
 
 
-TEST_P(LayerDatabase, del) 
+TEST_P(LayerRaw, del) 
 {    
     keyval values = GetParam();
     keyval processed = values;

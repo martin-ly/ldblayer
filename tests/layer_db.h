@@ -30,11 +30,19 @@ protected:
     virtual void SetUp();
     virtual void TearDown();
     
-    void simpleUpload(LevelDatabaseAbstract* db, keyval values);
-    void simpleCheckData(LevelDatabaseAbstract* db);
-    void simpleCheckData(LevelDatabaseAbstract* db, const keyval& values);
-    
     ~LayerDatabase();
+};
+
+class LayerRaw : public LayerDatabase 
+{
+protected:
+	void simpleUpload(LevelDatabaseAbstract* db, keyval values);
+	void simpleCheckData(LevelDatabaseAbstract* db);
+	void simpleCheckData(LevelDatabaseAbstract* db, const keyval& values);
+};
+
+class LayerTransaction : public LayerDatabase 
+{
 };
 
 namespace test 
