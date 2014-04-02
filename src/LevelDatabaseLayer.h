@@ -1,0 +1,31 @@
+#ifndef LEVELDATABASELAYER_H
+#define LEVELDATABASELAYER_H
+
+#include "LevelDatabaseAbstract.h"
+
+class LevelDatabase;
+
+class LevelDatabaseLayer : public LevelDatabaseAbstract
+{
+public:
+    LevelDatabaseLayer();
+    LevelDatabaseLayer(LevelDatabase* levelDatabase, const std::string& layerName);
+    
+    void open(LevelDatabase* levelDatabase, const std::string& layerName) noexcept;
+    void close();
+    
+    leveldb::Status Put(const std::string& key, const std::string& value);
+    leveldb::Status Get(const std::string& key, std::string* value);
+    leveldb::Status Del(const std::string& key);
+    
+    const std::string& getLayerName() const noexcept { return prefix; }
+    const std::string& getPrefix() const noexcept { return prefix; }    
+    
+    LevelDatabase* db() const noexcept { return m_db; }
+    
+private:
+    LevelDatabase* m_db;
+    std::string prefix;
+};
+
+#endif
