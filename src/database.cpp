@@ -1,4 +1,4 @@
-#include "LevelDatabase.h"
+#include "database.h"
 #include "LevelDatabaseLayer.h"
 #include "LevelDatabaseTransaction.h"
 #include "LevelDatabaseIterator.h"
@@ -10,24 +10,24 @@ namespace ldblayer
 
 using std::string;
 
-LevelDatabase::LevelDatabase()  noexcept
+Database::Database()  noexcept
  : db(nullptr)
 {
 }
 
-LevelDatabase::LevelDatabase(const leveldb::Options& options, const std::string& dbpath) 
+Database::Database(const leveldb::Options& options, const std::string& dbpath) 
  : db(nullptr)
 {    
 	assert(open(options, path).ok());
 }
 
-LevelDatabase::~LevelDatabase()
+Database::~Database()
 {
 	if (db)
 		delete db;
 }
 
-leveldb::Status LevelDatabase::open(const leveldb::Options& options, const std::string& path) 
+leveldb::Status Database::open(const leveldb::Options& options, const std::string& path) 
 {
 	if (db)
 		delete db;
@@ -42,62 +42,62 @@ leveldb::Status LevelDatabase::open(const leveldb::Options& options, const std::
 	return status;
 }
 
-leveldb::Status LevelDatabase::Put(const string& key, const string& value)
+leveldb::Status Database::Put(const string& key, const string& value)
 {
 	assert(db);
 	return db->Put(writeOptions, key, value);
 }
 
-leveldb::Status LevelDatabase::Del(const std::string& key) 
+leveldb::Status Database::Del(const std::string& key) 
 {
 	assert(db);
 	return db->Delete(writeOptions, key);
 }
 
-leveldb::Status LevelDatabase::Get(const string& key, std::string* value)
+leveldb::Status Database::Get(const string& key, std::string* value)
 {
 	assert(db);
 	return db->Get(readOptions, key, value);
 }
 
-LevelDatabaseLayer LevelDatabase::getLayer(const std::string& layerName) 
+LevelDatabaseLayer Database::getLayer(const std::string& layerName) 
 {    
 	LevelDatabaseLayer layer(this, layerName);
 	registerPrefix(layer.getPrefix());
 	return layer;
 }
 
-void LevelDatabase::registerPrefix(const std::string& prefix) 
+void Database::registerPrefix(const std::string& prefix) 
 {
 	prefixs.insert(prefix);
 }
 
-leveldb::Status LevelDatabase::Write(leveldb::WriteBatch* batch) 
+leveldb::Status Database::Write(leveldb::WriteBatch* batch) 
 {
 	assert(db);
 	return db->Write(writeOptions, batch);
 }
 
-LevelDatabaseTransaction LevelDatabase::createTransaction()
+LevelDatabaseTransaction Database::createTransaction()
 {
 	assert(db);
 	return LevelDatabaseTransaction(this);
 }
 
-LevelDatabaseIterator LevelDatabase::createIterator()
+LevelDatabaseIterator Database::createIterator()
 {
 	assert(db);
 	return LevelDatabaseIterator(this);
 }
 
-leveldb::Iterator* LevelDatabase::createRawIterator() 
+leveldb::Iterator* Database::createRawIterator() 
 {
 	assert(db);
 	leveldb::Iterator* it = db->NewIterator(readOptions);
 	return it;
 }
 
-leveldb::Status LevelDatabase::destroy() 
+leveldb::Status Database::destroy() 
 {
 	assert(!path.empty());
 

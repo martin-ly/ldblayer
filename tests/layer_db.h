@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 #include <gtest/gtest.h>
-#include "LevelDatabase.h"
+#include "database.h"
 #include "LevelDatabaseLayer.h"
 
 using std::string;
@@ -26,7 +26,7 @@ protected:
     LevelDatabaseLayer db1;
     LevelDatabaseLayer db2;
     LevelDatabaseLayer db3;
-    LevelDatabase dbPhisical;
+    Database dbPhisical;
     
     virtual void SetUp();
     virtual void TearDown();

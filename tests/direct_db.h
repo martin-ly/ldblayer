@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 #include <gtest/gtest.h>
-#include "LevelDatabase.h"
+#include "database.h"
 
 using std::string;
 using std::list;
@@ -22,7 +22,7 @@ using namespace ldblayer;
 class DirectDatabase : public ::testing::TestWithParam<keyval>
 {   
 protected:
-    LevelDatabase db;
+    Database db;
     
     virtual void SetUp();
     virtual void TearDown();

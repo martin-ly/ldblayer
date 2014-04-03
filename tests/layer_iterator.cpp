@@ -11,7 +11,7 @@ INSTANTIATE_TEST_CASE_P(ordereddata, LayerIterator, ::testing::Values(begin_keys
 
 TEST_F(LayerIterator, registered_prefixes) 
 {
-	LevelDatabase::prefix_list_t prefixes = dbPhisical.getDbPrefixes();
+	Database::prefix_list_t prefixes = dbPhisical.getDbPrefixes();
 	auto i = prefixes.begin();
 	EXPECT_EQ(*i, db1.getPrefix());
 	EXPECT_EQ(*++i, db2.getPrefix());

@@ -1,6 +1,6 @@
 #include "LevelDatabaseIterator.h"
+#include "database.h"
 #include "LevelDatabaseLayer.h"
-#include "LevelDatabase.h"
 #include <algorithm>
 
 namespace ldblayer
@@ -11,7 +11,7 @@ inline bool startsWith(const std::string& prefix, const std::string& toCheck)
 	return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();    
 }
 
-LevelDatabaseIterator::LevelDatabaseIterator(LevelDatabase* db, LevelDatabaseLayer* layout)
+LevelDatabaseIterator::LevelDatabaseIterator(Database* db, LevelDatabaseLayer* layout)
 : database(db),
   activeLayout(layout),
   m_isValid (false)
@@ -95,7 +95,7 @@ bool LevelDatabaseIterator::seekToFirst()
 bool LevelDatabaseIterator::seekToLast() 
 {
 	if (activeLayout) {
-		LevelDatabase::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
+		Database::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
 		auto iter = prefixes.find(activeLayout->getPrefix());
 
 		// database should contain current active layout.

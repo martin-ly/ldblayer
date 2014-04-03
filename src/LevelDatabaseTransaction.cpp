@@ -1,11 +1,11 @@
 #include "LevelDatabaseTransaction.h"
+#include "database.h"
 #include "LevelDatabaseLayer.h"
-#include "LevelDatabase.h"
 
 namespace ldblayer
 {
 
-LevelDatabaseTransaction::LevelDatabaseTransaction(LevelDatabase* database, LevelDatabaseLayer* layer)
+LevelDatabaseTransaction::LevelDatabaseTransaction(Database* database, LevelDatabaseLayer* layer)
 : db(database),
   activeLayer(layer)
 {

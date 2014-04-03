@@ -7,13 +7,13 @@
 namespace ldblayer
 {
 
-class LevelDatabase;
+class Database;
 class LevelDatabaseLayer;
 
 class LevelDatabaseTransaction 
 {
 public:
-	LevelDatabaseTransaction(LevelDatabase* database, LevelDatabaseLayer* layer = nullptr);    
+	LevelDatabaseTransaction(Database* database, LevelDatabaseLayer* layer = nullptr);    
 	void setActiveLayer(LevelDatabaseLayer* layer);
     
 	void Put(const std::string& key, const std::string& value);
@@ -21,7 +21,7 @@ public:
     
 	leveldb::Status commit();
 private:
-	LevelDatabase* db;
+	Database* db;
 	LevelDatabaseLayer* activeLayer;
 	leveldb::WriteBatch writeBatch;
 };

@@ -1,5 +1,5 @@
 #include "LevelDatabaseLayer.h"
-#include "LevelDatabase.h"
+#include "database.h"
 #include "LevelDatabaseTransaction.h"
 #include "LevelDatabaseIterator.h"
 
@@ -13,13 +13,13 @@ LevelDatabaseLayer::LevelDatabaseLayer()
 {
 }
 
-LevelDatabaseLayer::LevelDatabaseLayer(LevelDatabase* levelDatabase, const std::string& layerName)
+LevelDatabaseLayer::LevelDatabaseLayer(Database* levelDatabase, const std::string& layerName)
 : m_db(levelDatabase), prefix(layerName)
 {
 	m_db->registerPrefix(prefix);
 }
 
-void LevelDatabaseLayer::open(LevelDatabase* levelDatabase, const std::string& layerName)  noexcept
+void LevelDatabaseLayer::open(Database* levelDatabase, const std::string& layerName)  noexcept
 {
 	m_db = levelDatabase;
 	prefix = layerName;

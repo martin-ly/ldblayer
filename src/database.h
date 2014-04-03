@@ -11,17 +11,17 @@ namespace ldblayer
 class LevelDatabaseLayer;
 class LevelDatabaseIterator;
 
-class LevelDatabase : public LevelDatabaseAbstract
+class Database : public LevelDatabaseAbstract
 {
 public:
 	using prefix_list_t = std::set<std::string>;
 
-	LevelDatabase() noexcept;
-	LevelDatabase(const leveldb::Options& options, const std::string& path);
-	LevelDatabase(const LevelDatabase&) = delete;
-	~LevelDatabase();
+	Database() noexcept;
+	Database(const leveldb::Options& options, const std::string& path);
+	Database(const Database&) = delete;
+	~Database();
 
-	LevelDatabase& operator=(const LevelDatabase&) = delete;
+	Database& operator=(const Database&) = delete;
 
 	leveldb::Status open(const leveldb::Options& options, const std::string& path);
 

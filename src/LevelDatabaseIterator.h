@@ -6,13 +6,13 @@
 namespace ldblayer
 {
 
-class LevelDatabase;
+class Database;
 class LevelDatabaseLayer;
 
 class LevelDatabaseIterator
 {
 public:
-	LevelDatabaseIterator(LevelDatabase* db, LevelDatabaseLayer* layout = nullptr);
+	LevelDatabaseIterator(Database* db, LevelDatabaseLayer* layout = nullptr);
 	~LevelDatabaseIterator();
     
 	bool seekToFirst();
@@ -29,7 +29,7 @@ public:
     
 	void reopen();
 private:    
-	LevelDatabase* database;
+	Database* database;
 	LevelDatabaseLayer* activeLayout;
 	leveldb::Iterator* it;    
 	bool m_isValid;

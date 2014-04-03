@@ -6,15 +6,15 @@
 namespace ldblayer
 {
 
-class LevelDatabase;
+class Database;
 
 class LevelDatabaseLayer : public LevelDatabaseAbstract
 {
 public:
 	LevelDatabaseLayer();
-	LevelDatabaseLayer(LevelDatabase* levelDatabase, const std::string& layerName);
+	LevelDatabaseLayer(Database* levelDatabase, const std::string& layerName);
 
-	void open(LevelDatabase* levelDatabase, const std::string& layerName) noexcept;
+	void open(Database* levelDatabase, const std::string& layerName) noexcept;
 	void close();
     
 	virtual leveldb::Status Put(const std::string& key, const std::string& value);
@@ -26,10 +26,10 @@ public:
 
 	const std::string& getPrefix() const noexcept { return prefix; }   
 
-	LevelDatabase* db() const noexcept { return m_db; }
+	Database* db() const noexcept { return m_db; }
     
 private:
-	LevelDatabase* m_db;
+	Database* m_db;
 	std::string prefix;
 };
 
