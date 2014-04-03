@@ -48,7 +48,7 @@ protected:
 	void transactionUpload(LayerTransaction* transaction, keyval values);
 };
 
-class LayerIterator : public TestLayerTransaction 
+class TestLayerIterator : public TestLayerTransaction 
 {
 protected:
 	

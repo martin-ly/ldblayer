@@ -9,7 +9,7 @@ namespace ldblayer
 {
 
 class Layer;
-class LevelDatabaseIterator;
+class LayerIterator;
 
 class Database : public DatabaseAbstract
 {
@@ -34,7 +34,7 @@ public:
 	void registerPrefix(const std::string& layer);
 
 	virtual LayerTransaction createTransaction();
-	virtual LevelDatabaseIterator createIterator();
+	virtual LayerIterator createIterator();
 
 	leveldb::Iterator* createRawIterator();
 	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }

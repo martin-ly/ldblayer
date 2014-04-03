@@ -1,7 +1,7 @@
 #include "layer.h"
 #include "database.h"
 #include "layer_transaction.h"
-#include "LevelDatabaseIterator.h"
+#include "layer_iterator.h"
 
 namespace ldblayer 
 {
@@ -59,11 +59,11 @@ LayerTransaction Layer::createTransaction()
 	return LayerTransaction(m_db, this);
 }
 
-LevelDatabaseIterator Layer::createIterator()
+LayerIterator Layer::createIterator()
 {
 	assert(m_db);
 
-	LevelDatabaseIterator iterator = m_db->createIterator();
+	LayerIterator iterator = m_db->createIterator();
 	iterator.setLayout(this);	
 	
 	return iterator;

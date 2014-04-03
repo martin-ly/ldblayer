@@ -1,5 +1,5 @@
-#ifndef LEVELDATABASETRANSACTION_H
-#define LEVELDATABASETRANSACTION_H
+#ifndef LAYER_TRANSACTION
+#define LAYER_TRANSACTION
 
 #include <string>
 #include <leveldb/write_batch.h>

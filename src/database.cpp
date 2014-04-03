@@ -1,7 +1,7 @@
 #include "database.h"
 #include "layer.h"
 #include "layer_transaction.h"
-#include "LevelDatabaseIterator.h"
+#include "layer_iterator.h"
 
 #include <assert.h>
 
@@ -84,10 +84,10 @@ LayerTransaction Database::createTransaction()
 	return LayerTransaction(this);
 }
 
-LevelDatabaseIterator Database::createIterator()
+LayerIterator Database::createIterator()
 {
 	assert(db);
-	return LevelDatabaseIterator(this);
+	return LayerIterator(this);
 }
 
 leveldb::Iterator* Database::createRawIterator() 

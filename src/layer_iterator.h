@@ -1,5 +1,5 @@
-#ifndef LEVELDBITERATOR_H
-#define LEVELDBITERATOR_H
+#ifndef LAYER_ITERATOR_H
+#define LAYER_ITERATOR_H
 
 #include <leveldb/iterator.h>
 
@@ -9,11 +9,11 @@ namespace ldblayer
 class Database;
 class Layer;
 
-class LevelDatabaseIterator
+class LayerIterator
 {
 public:
-	LevelDatabaseIterator(Database* db, Layer* layout = nullptr);
-	~LevelDatabaseIterator();
+	LayerIterator(Database* db, Layer* layout = nullptr);
+	~LayerIterator();
     
 	bool seekToFirst();
 	bool seekToLast();

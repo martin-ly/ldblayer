@@ -1,6 +1,6 @@
 #include "direct_db.h"
 
-#include "LevelDatabaseIterator.h"
+#include "layer_iterator.h"
 
 using namespace test;
 
@@ -10,7 +10,7 @@ TEST_P(Iterator, seek_to_first)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator();
+	LayerIterator iterator = db.createIterator();
     
     keyval values = GetParam();
     
@@ -25,7 +25,7 @@ TEST_P(Iterator, seek_to_last)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator();
+	LayerIterator iterator = db.createIterator();
     
     keyval values = GetParam();    
     if (!values.empty()) {
@@ -39,7 +39,7 @@ TEST_P(Iterator, seek)
 {
     transactionUpload();
     
-    LevelDatabaseIterator iterator = db.createIterator();
+	LayerIterator iterator = db.createIterator();
     
     keyval values = GetParam();
    
@@ -72,7 +72,7 @@ TEST_P(Iterator, next)
 {
     transactionUpload();
     
-    LevelDatabaseIterator db_iterator = db.createIterator();
+	LayerIterator db_iterator = db.createIterator();
     
     keyval values = GetParam();
     

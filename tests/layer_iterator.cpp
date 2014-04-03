@@ -1,15 +1,15 @@
 #include "layer_db.h"
 
-#include "LevelDatabaseIterator.h"
+#include "layer_iterator.h"
 #include "layer_transaction.h"
 #include <algorithm>
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(simpledata, LayerIterator, ::testing::Values(no_keys, one_key, simple_keys));
-INSTANTIATE_TEST_CASE_P(ordereddata, LayerIterator, ::testing::Values(begin_keys, midle_keys, end_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, TestLayerIterator, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(ordereddata, TestLayerIterator, ::testing::Values(begin_keys, midle_keys, end_keys));
 
-TEST_F(LayerIterator, registered_prefixes) 
+TEST_F(TestLayerIterator, registered_prefixes) 
 {
 	Database::prefix_list_t prefixes = dbPhisical.getDbPrefixes();
 	auto i = prefixes.begin();
@@ -18,7 +18,7 @@ TEST_F(LayerIterator, registered_prefixes)
 	EXPECT_EQ(*++i, db3.getPrefix());
 }
 
-TEST_P(LayerIterator, seek_to_first)
+TEST_P(TestLayerIterator, seek_to_first)
 {
 	keyval values = GetParam();
 	
@@ -26,9 +26,9 @@ TEST_P(LayerIterator, seek_to_first)
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 		
-	LevelDatabaseIterator iterator1 = db1.createIterator();
-	LevelDatabaseIterator iterator2 = db2.createIterator();
-	LevelDatabaseIterator iterator3 = db3.createIterator();
+	LayerIterator iterator1 = db1.createIterator();
+	LayerIterator iterator2 = db2.createIterator();
+	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
 		EXPECT_FALSE(iterator2.seekToFirst());    
@@ -71,7 +71,7 @@ TEST_P(LayerIterator, seek_to_first)
 }
 
 
-TEST_P(LayerIterator, seek_to_last)
+TEST_P(TestLayerIterator, seek_to_last)
 {
 	keyval values = GetParam();
 	
@@ -79,9 +79,9 @@ TEST_P(LayerIterator, seek_to_last)
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
-	LevelDatabaseIterator iterator1 = db1.createIterator();
-	LevelDatabaseIterator iterator2 = db2.createIterator();
-	LevelDatabaseIterator iterator3 = db3.createIterator();
+	LayerIterator iterator1 = db1.createIterator();
+	LayerIterator iterator2 = db2.createIterator();
+	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
 		EXPECT_FALSE(iterator2.seekToLast());    
@@ -153,7 +153,7 @@ TEST_P(LayerIterator, seek_to_last)
 }
 
 
-TEST_P(LayerIterator, seek)
+TEST_P(TestLayerIterator, seek)
 {
 	keyval values = GetParam();
 	
@@ -161,9 +161,9 @@ TEST_P(LayerIterator, seek)
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
-	LevelDatabaseIterator iterator1 = db1.createIterator();
-	LevelDatabaseIterator iterator2 = db2.createIterator();
-	LevelDatabaseIterator iterator3 = db3.createIterator();
+	LayerIterator iterator1 = db1.createIterator();
+	LayerIterator iterator2 = db2.createIterator();
+	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
 		EXPECT_FALSE(iterator2.seekToLast());    
@@ -324,7 +324,7 @@ TEST_P(LayerIterator, seek)
 }
 
 
-TEST_P(LayerIterator, next) 
+TEST_P(TestLayerIterator, next) 
 {
 	keyval values = GetParam();
 	
@@ -332,9 +332,9 @@ TEST_P(LayerIterator, next)
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
-	LevelDatabaseIterator iterator1 = db1.createIterator();
-	LevelDatabaseIterator iterator2 = db2.createIterator();
-	LevelDatabaseIterator iterator3 = db3.createIterator();
+	LayerIterator iterator1 = db1.createIterator();
+	LayerIterator iterator2 = db2.createIterator();
+	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {		
 		return;
@@ -410,7 +410,7 @@ TEST_P(LayerIterator, next)
 	EXPECT_EQ(values.size(), count);
 }
 
-TEST_P(LayerIterator, prev)
+TEST_P(TestLayerIterator, prev)
 {
 	keyval values = GetParam();
 	
@@ -418,9 +418,9 @@ TEST_P(LayerIterator, prev)
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
-	LevelDatabaseIterator iterator1 = db1.createIterator();
-	LevelDatabaseIterator iterator2 = db2.createIterator();
-	LevelDatabaseIterator iterator3 = db3.createIterator();
+	LayerIterator iterator1 = db1.createIterator();
+	LayerIterator iterator2 = db2.createIterator();
+	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {		
 		return;

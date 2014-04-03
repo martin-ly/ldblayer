@@ -1,4 +1,4 @@
-#include "LevelDatabaseIterator.h"
+#include "layer_iterator.h"
 #include "database.h"
 #include "layer.h"
 #include <algorithm>
@@ -11,7 +11,7 @@ inline bool startsWith(const std::string& prefix, const std::string& toCheck)
 	return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();    
 }
 
-LevelDatabaseIterator::LevelDatabaseIterator(Database* db, Layer* layout)
+LayerIterator::LayerIterator(Database* db, Layer* layout)
 : database(db),
   activeLayout(layout),
   m_isValid (false)
@@ -19,13 +19,13 @@ LevelDatabaseIterator::LevelDatabaseIterator(Database* db, Layer* layout)
 	it = db->createRawIterator();
 }
 
-LevelDatabaseIterator::~LevelDatabaseIterator() 
+LayerIterator::~LayerIterator() 
 {    
 	if (it)
 		delete it;
 }
 
-bool LevelDatabaseIterator::next() 
+bool LayerIterator::next() 
 {   
 	if (!m_isValid) {
 		return false;
@@ -47,7 +47,7 @@ bool LevelDatabaseIterator::next()
 	return m_isValid = false;
 }
 
-bool LevelDatabaseIterator::prev() 
+bool LayerIterator::prev() 
 {
 	if (!m_isValid) {
 		return false;
@@ -69,7 +69,7 @@ bool LevelDatabaseIterator::prev()
 	return m_isValid = false;    
 }
 
-bool LevelDatabaseIterator::seekToFirst() 
+bool LayerIterator::seekToFirst() 
 {
 	if (activeLayout) {
 		it->Seek(activeLayout->getPrefix());
@@ -92,7 +92,7 @@ bool LevelDatabaseIterator::seekToFirst()
 	return m_isValid = it->Valid();
 }
 
-bool LevelDatabaseIterator::seekToLast() 
+bool LayerIterator::seekToLast() 
 {
 	if (activeLayout) {
 		Database::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
@@ -144,7 +144,7 @@ bool LevelDatabaseIterator::seekToLast()
 	return m_isValid = false;
 }
 
-bool LevelDatabaseIterator::seek(const std::string& key) 
+bool LayerIterator::seek(const std::string& key) 
 {
 	if (activeLayout) {
 		std::string seek_key = activeLayout->getPrefix();
@@ -167,7 +167,7 @@ bool LevelDatabaseIterator::seek(const std::string& key)
 	return m_isValid = false;
 }
 
-std::string LevelDatabaseIterator::key() const { 
+std::string LayerIterator::key() const { 
 	std::string key;
 	
 	if (m_isValid) {
@@ -185,7 +185,7 @@ std::string LevelDatabaseIterator::key() const {
 	return key;
 }
 
-std::string LevelDatabaseIterator::value() const 
+std::string LayerIterator::value() const 
 { 
 	std::string value;
 	if (m_isValid) {
@@ -196,7 +196,7 @@ std::string LevelDatabaseIterator::value() const
 	return value;
 }
 
-void LevelDatabaseIterator::reopen() 
+void LayerIterator::reopen() 
 {
 	if (it) 
 		delete it;
