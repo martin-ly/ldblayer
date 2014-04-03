@@ -207,8 +207,7 @@ TEST_P(LayerIterator, seek)
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
-	
-	
+
 	// end of test block
 	
 	// insert keys BEFORE this database (to first db1)
@@ -409,4 +408,101 @@ TEST_P(LayerIterator, iterator_next)
 	}
 	
 	EXPECT_EQ(values.size(), count);
+}
+
+TEST_P(LayerIterator, iterator_prev)
+{
+	keyval values = GetParam();
+	
+	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	transactionUpload(&txn2, values);
+	EXPECT_TRUE(txn2.commit().ok());
+	
+	LevelDatabaseIterator iterator1 = db1.createIterator();
+	LevelDatabaseIterator iterator2 = db2.createIterator();
+	LevelDatabaseIterator iterator3 = db3.createIterator();
+	
+	if (values.empty()) {		
+		return;
+	}
+	
+	unsigned int count = 0;
+	
+	keyval sorted_values = values;
+	sorted_values.sort();
+	
+	auto i = sorted_values.rbegin();
+	for (iterator2.seekToLast(); iterator2.isValid(); iterator2.prev(), ++i, ++count) {
+		EXPECT_EQ(iterator2.key(), i->first);
+		EXPECT_EQ(iterator2.value(), i->second);
+	}
+	
+	EXPECT_EQ(values.size(), count);
+	
+	EXPECT_TRUE(iterator2.seekToFirst());
+	EXPECT_FALSE(iterator2.prev());
+	
+	// insert keys BEFORE this database (to first db1)
+	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	transactionUpload(&txn1, test::begin_keys);
+	EXPECT_TRUE(txn1.commit().ok());	
+	
+	// revalidate iterators after commit of transactions
+	iterator1.reopen();
+	iterator2.reopen();
+	iterator3.reopen();
+	
+	count = 0;
+	i = sorted_values.rbegin();
+	for (iterator2.seekToLast(); iterator2.isValid(); iterator2.prev(), ++i, ++count) {
+		EXPECT_EQ(iterator2.key(), i->first);
+		EXPECT_EQ(iterator2.value(), i->second);
+	}
+	
+	EXPECT_EQ(values.size(), count);	
+	
+	keyval begin_keyes_sorted = begin_keys;
+	begin_keyes_sorted.sort();
+	
+	count = 0;
+	auto begin_keys_iter = begin_keyes_sorted.rbegin();
+	for (iterator1.seekToLast(); iterator1.isValid(); iterator1.prev(), ++begin_keys_iter, ++count) {
+		EXPECT_EQ(iterator1.key(), begin_keys_iter->first);
+		EXPECT_EQ(iterator1.value(), begin_keys_iter->second);
+	}
+	
+	EXPECT_EQ(begin_keyes_sorted.size(), count);
+	
+	EXPECT_TRUE(iterator1.seekToFirst());
+	EXPECT_FALSE(iterator1.prev());
+	
+	// insert keys AFTER this database
+	LevelDatabaseTransaction txn3 = db3.createTransaction();
+	transactionUpload(&txn3, test::end_keys);
+	EXPECT_TRUE(txn3.commit().ok());
+	
+	// revalidate iterators after commit of transactions
+	iterator1.reopen();
+	iterator2.reopen();
+	iterator3.reopen();
+	
+	count = 0;
+	i = sorted_values.rbegin();
+	for (iterator2.seekToLast(); iterator2.isValid(); iterator2.prev(), ++i, ++count) {
+		EXPECT_EQ(iterator2.key(), i->first);
+		EXPECT_EQ(iterator2.value(), i->second);
+	}
+	
+	EXPECT_EQ(values.size(), count);
+	
+	count = 0;
+	keyval end_keys_sorted = end_keys;
+	end_keys_sorted.sort();
+	i = end_keys_sorted.rbegin();
+	for (iterator3.seekToLast(); iterator3.isValid(); iterator3.prev(), ++i, ++count) {
+		EXPECT_EQ(iterator3.key(), i->first);
+		EXPECT_EQ(iterator3.value(), i->second);
+	}
+	
+	EXPECT_EQ(end_keys_sorted.size(), count);
 }
