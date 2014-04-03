@@ -109,7 +109,7 @@ bool LayerIterator::seekToLast()
 		if (iter != prefixes.end()) {
 			const std::string searchPrefix = *iter;
 			it->Seek(searchPrefix);
-        } else {
+		} else {
 			// current prefix are last, so just navigate to last key;
 			it->SeekToLast();
 			if (!it->Valid())
