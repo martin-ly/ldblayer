@@ -88,7 +88,7 @@ leveldb::Status Database::registerPrefix(const std::string& prefix)
 		status = layer.Put(prefix, prefix);
 
 	if (status.ok())
-		prefixs.insert(prefix);	
+		prefixs.insert(prefix);
 	}
 	
 	return status;

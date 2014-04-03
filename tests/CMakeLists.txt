@@ -22,6 +22,6 @@ set(ldb_tests_SRCS_HEADERS
 
 
 add_executable(ldb_tests ${ldb_tests_SRCS_CXX} ${ldb_tests_SRCS_HEADERS})
-target_link_libraries(ldb_tests ldb ${LDB_LIBRARY} ${GTEST_BOTH_LIBRARIES})
+target_link_libraries(ldb_tests ldblayer ${LDB_LIBRARY} ${GTEST_BOTH_LIBRARIES})
 
 GTEST_ADD_TESTS(ldb_tests "" ${ldb_tests_SRCS_CXX})
