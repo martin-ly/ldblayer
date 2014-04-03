@@ -5,21 +5,21 @@ using namespace test;
 INSTANTIATE_TEST_CASE_P(simpledata, LayerRaw, ::testing::Values(no_keys, one_key, simple_keys));
 
 // simple database operations
-void LayerRaw::simpleUpload(LevelDatabaseAbstract* db, keyval values) 
+void LayerRaw::simpleUpload(DatabaseAbstract* db, keyval values) 
 {    
     for (auto i = values.rbegin(); i != values.rend(); i++) {
         EXPECT_TRUE(db->Put(i->first, i->second).ok());    
     }
 }
 
-void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, bool expect)
+void LayerRaw::simpleCheckData(DatabaseAbstract* db, bool expect)
 {
     keyval values = GetParam();
     
     simpleCheckData(db, values, expect);
 }
 
-void LayerRaw::simpleCheckData(LevelDatabaseAbstract* db, const keyval& values, bool expect) 
+void LayerRaw::simpleCheckData(DatabaseAbstract* db, const keyval& values, bool expect) 
 {
     for (auto row: values) {
         string value;

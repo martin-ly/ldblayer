@@ -37,9 +37,9 @@ protected:
 class LayerRaw : public LayerDatabase 
 {
 protected:
-	void simpleUpload(LevelDatabaseAbstract* db, keyval values);
-	void simpleCheckData(LevelDatabaseAbstract* db, bool expect = true);
-	void simpleCheckData(LevelDatabaseAbstract* db, const keyval& values, bool expect = true);
+	void simpleUpload(DatabaseAbstract* db, keyval values);
+	void simpleCheckData(DatabaseAbstract* db, bool expect = true);
+	void simpleCheckData(DatabaseAbstract* db, const keyval& values, bool expect = true);
 };
 
 class LayerTransaction : public LayerRaw 

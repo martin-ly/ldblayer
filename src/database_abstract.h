@@ -1,5 +1,5 @@
-#ifndef LEVELDATABASEABSTRACT_H
-#define LEVELDATABASEABSTRACT_H
+#ifndef DATABASE_ABSTRACT_H
+#define DATABASE_ABSTRACT_H
 
 #include <leveldb/status.h>
 
@@ -9,7 +9,7 @@ namespace ldblayer
 class LevelDatabaseTransaction;
 class LevelDatabaseIterator;
 
-class LevelDatabaseAbstract 
+class DatabaseAbstract 
 {
 public:
 	virtual leveldb::Status Put(const std::string& key, const std::string& value) = 0;

@@ -10,7 +10,7 @@ set(ldb_SRCS_CXX
 
 # .h headers
 set(ldb_SRCS_HEADERS
-    LevelDatabaseAbstract.h
+    database_abstract.h
     database.h
     LevelDatabaseLayer.h
     LevelDatabaseTransaction.h

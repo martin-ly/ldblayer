@@ -1,14 +1,14 @@
 #ifndef LEVELDATABASELAYER_H
 #define LEVELDATABASELAYER_H
 
-#include "LevelDatabaseAbstract.h"
+#include "database_abstract.h"
 
 namespace ldblayer
 {
 
 class Database;
 
-class LevelDatabaseLayer : public LevelDatabaseAbstract
+class LevelDatabaseLayer : public DatabaseAbstract
 {
 public:
 	LevelDatabaseLayer();

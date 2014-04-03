@@ -1,9 +1,9 @@
-#ifndef LEVELDATABASE_H
-#define LEVELDATABASE_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
 #include <set>
 #include <leveldb/db.h>
-#include "LevelDatabaseAbstract.h"
+#include "database_abstract.h"
 
 namespace ldblayer
 {
@@ -11,7 +11,7 @@ namespace ldblayer
 class LevelDatabaseLayer;
 class LevelDatabaseIterator;
 
-class Database : public LevelDatabaseAbstract
+class Database : public DatabaseAbstract
 {
 public:
 	using prefix_list_t = std::set<std::string>;
