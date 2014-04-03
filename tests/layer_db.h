@@ -5,7 +5,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "database.h"
-#include "LevelDatabaseLayer.h"
+#include "layer.h"
 
 using std::string;
 using std::list;
@@ -23,9 +23,9 @@ using namespace ldblayer;
 class LayerDatabase : public ::testing::TestWithParam<keyval>
 {   
 protected:
-    LevelDatabaseLayer db1;
-    LevelDatabaseLayer db2;
-    LevelDatabaseLayer db3;
+	Layer db1;
+	Layer db2;
+	Layer db3;
     Database dbPhisical;
     
     virtual void SetUp();

@@ -1,5 +1,5 @@
 #include "database.h"
-#include "LevelDatabaseLayer.h"
+#include "layer.h"
 #include "LevelDatabaseTransaction.h"
 #include "LevelDatabaseIterator.h"
 
@@ -60,9 +60,9 @@ leveldb::Status Database::Get(const string& key, std::string* value)
 	return db->Get(readOptions, key, value);
 }
 
-LevelDatabaseLayer Database::getLayer(const std::string& layerName) 
+Layer Database::getLayer(const std::string& layerName) 
 {    
-	LevelDatabaseLayer layer(this, layerName);
+	Layer layer(this, layerName);
 	registerPrefix(layer.getPrefix());
 	return layer;
 }

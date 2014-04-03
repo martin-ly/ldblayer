@@ -1,5 +1,5 @@
-#ifndef LEVELDATABASELAYER_H
-#define LEVELDATABASELAYER_H
+#ifndef LAYER_H
+#define LAYER_H
 
 #include "database_abstract.h"
 
@@ -8,11 +8,11 @@ namespace ldblayer
 
 class Database;
 
-class LevelDatabaseLayer : public DatabaseAbstract
+class Layer : public DatabaseAbstract
 {
 public:
-	LevelDatabaseLayer();
-	LevelDatabaseLayer(Database* levelDatabase, const std::string& layerName);
+	Layer();
+	Layer(Database* levelDatabase, const std::string& layerName);
 
 	void open(Database* levelDatabase, const std::string& layerName) noexcept;
 	void close();

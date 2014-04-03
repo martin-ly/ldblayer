@@ -8,13 +8,13 @@ namespace ldblayer
 {
 
 class Database;
-class LevelDatabaseLayer;
+class Layer;
 
 class LevelDatabaseTransaction 
 {
 public:
-	LevelDatabaseTransaction(Database* database, LevelDatabaseLayer* layer = nullptr);    
-	void setActiveLayer(LevelDatabaseLayer* layer);
+	LevelDatabaseTransaction(Database* database, Layer* layer = nullptr);    
+	void setActiveLayer(Layer* layer);
     
 	void Put(const std::string& key, const std::string& value);
 	void Delete(const std::string& key);
@@ -22,7 +22,7 @@ public:
 	leveldb::Status commit();
 private:
 	Database* db;
-	LevelDatabaseLayer* activeLayer;
+	Layer* activeLayer;
 	leveldb::WriteBatch writeBatch;
 };
 

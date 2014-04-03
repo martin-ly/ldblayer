@@ -1,6 +1,6 @@
 #include "LevelDatabaseIterator.h"
 #include "database.h"
-#include "LevelDatabaseLayer.h"
+#include "layer.h"
 #include <algorithm>
 
 namespace ldblayer
@@ -11,7 +11,7 @@ inline bool startsWith(const std::string& prefix, const std::string& toCheck)
 	return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();    
 }
 
-LevelDatabaseIterator::LevelDatabaseIterator(Database* db, LevelDatabaseLayer* layout)
+LevelDatabaseIterator::LevelDatabaseIterator(Database* db, Layer* layout)
 : database(db),
   activeLayout(layout),
   m_isValid (false)

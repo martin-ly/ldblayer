@@ -7,12 +7,12 @@ namespace ldblayer
 {
 
 class Database;
-class LevelDatabaseLayer;
+class Layer;
 
 class LevelDatabaseIterator
 {
 public:
-	LevelDatabaseIterator(Database* db, LevelDatabaseLayer* layout = nullptr);
+	LevelDatabaseIterator(Database* db, Layer* layout = nullptr);
 	~LevelDatabaseIterator();
     
 	bool seekToFirst();
@@ -25,12 +25,12 @@ public:
 	std::string operator* () const { return value(); }
 	std::string key() const;
 	std::string value() const;
-	void setLayout(LevelDatabaseLayer* layout) { activeLayout = layout; }    
+	void setLayout(Layer* layout) { activeLayout = layout; }    
     
 	void reopen();
 private:    
 	Database* database;
-	LevelDatabaseLayer* activeLayout;
+	Layer* activeLayout;
 	leveldb::Iterator* it;    
 	bool m_isValid;
 };

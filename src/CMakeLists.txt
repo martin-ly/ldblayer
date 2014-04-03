@@ -3,7 +3,7 @@ include_directories(${GTEST_INCLUDE_DIR})
 # .cxx sources
 set(ldb_SRCS_CXX
     database.cpp
-    LevelDatabaseLayer.cpp
+    layer.cpp
     LevelDatabaseTransaction.cpp
     LevelDatabaseIterator.cpp
 )
@@ -12,7 +12,7 @@ set(ldb_SRCS_CXX
 set(ldb_SRCS_HEADERS
     database_abstract.h
     database.h
-    LevelDatabaseLayer.h
+    layer.h
     LevelDatabaseTransaction.h
     LevelDatabaseIterator.h
 )

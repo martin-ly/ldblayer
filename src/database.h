@@ -8,7 +8,7 @@
 namespace ldblayer
 {
 
-class LevelDatabaseLayer;
+class Layer;
 class LevelDatabaseIterator;
 
 class Database : public DatabaseAbstract
@@ -30,7 +30,7 @@ public:
 	leveldb::Status Get(const std::string& key, std::string* value);
 	leveldb::Status Write(leveldb::WriteBatch* batch);
 
-	LevelDatabaseLayer getLayer(const std::string& layerName);
+	Layer getLayer(const std::string& layerName);
 	void registerPrefix(const std::string& layer);
 
 	virtual LevelDatabaseTransaction createTransaction();
