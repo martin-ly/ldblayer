@@ -2,6 +2,7 @@
 #include "layer.h"
 #include "layer_transaction.h"
 #include "layer_iterator.h"
+#include "defs.h"
 
 #include <assert.h>
 
@@ -34,13 +35,24 @@ leveldb::Status Database::open(const leveldb::Options& options, const std::strin
 
 	leveldb::Status status = leveldb::DB::Open(options, path.c_str(), &db);
 	if (status.ok()) {
-		this->path = path;        
+		this->path = path;
+
+		loadPrefixes();
 	} else {
 		db = nullptr;
 	}
 
 	return status;
 }
+
+void Database::close()
+{
+	if (db) {
+		delete db;
+		db = nullptr;
+	}
+}
+
 
 leveldb::Status Database::Put(const string& key, const string& value)
 {
@@ -67,9 +79,19 @@ Layer Database::getLayer(const std::string& layerName)
 	return layer;
 }
 
-void Database::registerPrefix(const std::string& prefix) 
+leveldb::Status Database::registerPrefix(const std::string& prefix) 
 {
-	prefixs.insert(prefix);
+	leveldb::Status status;
+	
+	if (prefixs.find(prefix) == prefixs.end()) {
+		Layer layer(this, InternalDatabaseLayer, false);
+		status = layer.Put(prefix, prefix);
+
+	if (status.ok())
+		prefixs.insert(prefix);	
+	}
+	
+	return status;
 }
 
 leveldb::Status Database::Write(leveldb::WriteBatch* batch) 
@@ -108,5 +130,16 @@ leveldb::Status Database::destroy()
 
 	return leveldb::DestroyDB(path, leveldb::Options());
 }
+
+void Database::loadPrefixes()
+{
+	Layer layer(this, InternalDatabaseLayer, false);
+	LayerIterator iterator = layer.createIterator();
+	
+	for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
+		prefixs.insert(iterator.value());		
+	}
+}
+
 
 }	// end of namespace

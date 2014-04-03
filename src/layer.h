@@ -12,9 +12,9 @@ class Layer : public DatabaseAbstract
 {
 public:
 	Layer();
-	Layer(Database* levelDatabase, const std::string& layerName);
+	Layer(Database* levelDatabase, const std::string& layerName, bool registerPrefix = true);
 
-	void open(Database* levelDatabase, const std::string& layerName) noexcept;
+	void open(Database* levelDatabase, const std::string& layerName, bool registerPrefix = true);
 	void close();
     
 	virtual leveldb::Status Put(const std::string& key, const std::string& value);

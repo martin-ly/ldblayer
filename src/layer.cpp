@@ -13,18 +13,21 @@ Layer::Layer()
 {
 }
 
-Layer::Layer(Database* levelDatabase, const std::string& layerName)
+Layer::Layer(Database* levelDatabase, const std::string& layerName, bool registerPrefix)
 : m_db(levelDatabase), prefix(layerName)
 {
-	m_db->registerPrefix(prefix);
+	if (registerPrefix)
+		m_db->registerPrefix(prefix);
 }
 
-void Layer::open(Database* levelDatabase, const std::string& layerName)  noexcept
+void Layer::open(Database* levelDatabase, const std::string& layerName, bool registerPrefix)
 {
 	m_db = levelDatabase;
 	prefix = layerName;
 
-	m_db->registerPrefix(prefix);
+	if (registerPrefix) {
+		m_db->registerPrefix(prefix);
+	}
 }
 
 void Layer::close()

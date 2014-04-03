@@ -24,6 +24,8 @@ public:
 	Database& operator=(const Database&) = delete;
 
 	leveldb::Status open(const leveldb::Options& options, const std::string& path);
+	void close();
+	leveldb::Status destroy();
 
 	leveldb::Status Put(const std::string& key, const std::string& value);
 	leveldb::Status Del(const std::string& key);
@@ -31,19 +33,19 @@ public:
 	leveldb::Status Write(leveldb::WriteBatch* batch);
 
 	Layer getLayer(const std::string& layerName);
-	void registerPrefix(const std::string& layer);
+	leveldb::Status registerPrefix(const std::string& layer);
 
 	virtual LayerTransaction createTransaction();
 	virtual LayerIterator createIterator();
 
 	leveldb::Iterator* createRawIterator();
-	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }
-
-	leveldb::Status destroy();
+	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }	
 
 	leveldb::DB* getDb() noexcept { return db; }
 
 private:
+	void loadPrefixes();
+	
 	leveldb::DB* db;
 	leveldb::ReadOptions readOptions;
 	leveldb::WriteOptions writeOptions;

@@ -31,3 +31,32 @@ void LayerDatabase::TearDown()
 LayerDatabase::~LayerDatabase() 
 {
 }
+
+TEST_F(LayerDatabase, loadPrefix) 
+{
+	db1.close();
+	db2.close();
+	db3.close();
+	
+	dbPhisical.close();
+	SetUp();
+	
+	Database::prefix_list_t prefixes = dbPhisical.getDbPrefixes();
+	auto i = prefixes.begin();
+	EXPECT_EQ(*i++, db1.getPrefix());
+	EXPECT_EQ(*i++, db2.getPrefix());
+	EXPECT_EQ(*i, db3.getPrefix());
+	
+	// add new layer
+	Layer layer = dbPhisical.getLayer("some_new_layer");
+
+	// check if this layer exist in database
+	prefixes = dbPhisical.getDbPrefixes();
+	EXPECT_TRUE(prefixes.find("some_new_layer") != prefixes.end());
+	
+	dbPhisical.close();
+	SetUp();
+
+	prefixes = dbPhisical.getDbPrefixes();
+	EXPECT_TRUE(prefixes.find("some_new_layer") != prefixes.end());
+}
