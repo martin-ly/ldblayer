@@ -16,6 +16,7 @@ using std::pair;
 #endif
 
 using keyval = list<pair<string, string>>;
+using namespace ldblayer;
 
 // To use a test fixture, derive a class from testing::Test.
 class DirectDatabase : public ::testing::TestWithParam<keyval>

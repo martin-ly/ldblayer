@@ -4,23 +4,28 @@
 #include <string>
 #include <leveldb/write_batch.h>
 
+namespace ldblayer
+{
+
 class LevelDatabase;
 class LevelDatabaseLayer;
 
 class LevelDatabaseTransaction 
 {
 public:
-    LevelDatabaseTransaction(LevelDatabase* database, LevelDatabaseLayer* layer = nullptr);    
-    void setActiveLayer(LevelDatabaseLayer* layer);
+	LevelDatabaseTransaction(LevelDatabase* database, LevelDatabaseLayer* layer = nullptr);    
+	void setActiveLayer(LevelDatabaseLayer* layer);
     
-    void Put(const std::string& key, const std::string& value);
-    void Delete(const std::string& key);
+	void Put(const std::string& key, const std::string& value);
+	void Delete(const std::string& key);
     
-    leveldb::Status commit();
+	leveldb::Status commit();
 private:
-    LevelDatabase* db;
-    LevelDatabaseLayer* activeLayer;
-    leveldb::WriteBatch writeBatch;
+	LevelDatabase* db;
+	LevelDatabaseLayer* activeLayer;
+	leveldb::WriteBatch writeBatch;
 };
+
+} // end of namespace
 
 #endif

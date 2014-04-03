@@ -45,26 +45,25 @@ TEST_P(LayerTransaction, get)
 	simpleCheckData(&db1, values, false);
 }
 
-
-TEST_P(LayerTransaction, del) 
+TEST_P(LayerTransaction, del)
 {
 	keyval values = GetParam();
 	LevelDatabaseTransaction txn1 = db1.createTransaction();
-	
+
 	transactionUpload(&txn1, values);
 	EXPECT_TRUE(txn1.commit().ok());
 	simpleCheckData(&db1, values);
-	
+
 	if (values.empty())
 		return;
-	
+
 	txn1.Delete(values.begin()->first);
 	simpleCheckData(&db1, values);
 	simpleCheckData(&db2, values, false);
 	simpleCheckData(&db3, values, false);
-	
+
 	EXPECT_TRUE(txn1.commit().ok());
-	
+
 	values.pop_front();
 	simpleCheckData(&db1, values);
 }
