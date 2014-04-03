@@ -324,7 +324,7 @@ TEST_P(LayerIterator, seek)
 }
 
 
-TEST_P(LayerIterator, iterator_next) 
+TEST_P(LayerIterator, next) 
 {
 	keyval values = GetParam();
 	
@@ -410,7 +410,7 @@ TEST_P(LayerIterator, iterator_next)
 	EXPECT_EQ(values.size(), count);
 }
 
-TEST_P(LayerIterator, iterator_prev)
+TEST_P(LayerIterator, prev)
 {
 	keyval values = GetParam();
 	

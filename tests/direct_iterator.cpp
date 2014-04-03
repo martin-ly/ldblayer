@@ -68,7 +68,7 @@ TEST_P(Iterator, seek)
 	EXPECT_EQ(iterator.key(), "key_a");
 }
 
-TEST_P(Iterator, iterator_next) 
+TEST_P(Iterator, next) 
 {
     transactionUpload();
     
