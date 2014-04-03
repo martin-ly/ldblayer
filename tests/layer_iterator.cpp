@@ -1,7 +1,7 @@
 #include "layer_db.h"
 
 #include "LevelDatabaseIterator.h"
-#include "LevelDatabaseTransaction.h"
+#include "layer_transaction.h"
 #include <algorithm>
 
 using namespace test;
@@ -22,7 +22,7 @@ TEST_P(LayerIterator, seek_to_first)
 {
 	keyval values = GetParam();
 	
-	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	LayerTransaction txn2 = db2.createTransaction();
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 		
@@ -46,7 +46,7 @@ TEST_P(LayerIterator, seek_to_first)
 	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 	transactionUpload(&txn1, test::begin_keys);
 	EXPECT_TRUE(txn1.commit().ok());
 	
@@ -75,7 +75,7 @@ TEST_P(LayerIterator, seek_to_last)
 {
 	keyval values = GetParam();
 	
-	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	LayerTransaction txn2 = db2.createTransaction();
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
@@ -102,7 +102,7 @@ TEST_P(LayerIterator, seek_to_last)
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 	transactionUpload(&txn1, test::begin_keys);
 	EXPECT_TRUE(txn1.commit().ok());
 	
@@ -126,7 +126,7 @@ TEST_P(LayerIterator, seek_to_last)
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys AFTER this database
-	LevelDatabaseTransaction txn3 = db3.createTransaction();
+	LayerTransaction txn3 = db3.createTransaction();
 	transactionUpload(&txn3, test::end_keys);
 	EXPECT_TRUE(txn3.commit().ok());
 	
@@ -157,7 +157,7 @@ TEST_P(LayerIterator, seek)
 {
 	keyval values = GetParam();
 	
-	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	LayerTransaction txn2 = db2.createTransaction();
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
@@ -211,7 +211,7 @@ TEST_P(LayerIterator, seek)
 	// end of test block
 	
 	// insert keys BEFORE this database (to first db1)
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 	transactionUpload(&txn1, test::begin_keys);
 	EXPECT_TRUE(txn1.commit().ok());
 	
@@ -267,7 +267,7 @@ TEST_P(LayerIterator, seek)
 	// end of test block
 	
 	// insert keys AFTER this database
-	LevelDatabaseTransaction txn3 = db3.createTransaction();
+	LayerTransaction txn3 = db3.createTransaction();
 	transactionUpload(&txn3, test::end_keys);
 	EXPECT_TRUE(txn3.commit().ok());
 	
@@ -328,7 +328,7 @@ TEST_P(LayerIterator, next)
 {
 	keyval values = GetParam();
 	
-	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	LayerTransaction txn2 = db2.createTransaction();
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
@@ -357,7 +357,7 @@ TEST_P(LayerIterator, next)
 	EXPECT_FALSE(iterator2.next());
 	
 	// insert keys BEFORE this database (to first db1)
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 	transactionUpload(&txn1, test::begin_keys);
 	EXPECT_TRUE(txn1.commit().ok());	
 	
@@ -391,7 +391,7 @@ TEST_P(LayerIterator, next)
 	EXPECT_FALSE(iterator1.next());
 	
 	// insert keys AFTER this database
-	LevelDatabaseTransaction txn3 = db3.createTransaction();
+	LayerTransaction txn3 = db3.createTransaction();
 	transactionUpload(&txn3, test::end_keys);
 	EXPECT_TRUE(txn3.commit().ok());
 	
@@ -414,7 +414,7 @@ TEST_P(LayerIterator, prev)
 {
 	keyval values = GetParam();
 	
-	LevelDatabaseTransaction txn2 = db2.createTransaction();
+	LayerTransaction txn2 = db2.createTransaction();
 	transactionUpload(&txn2, values);
 	EXPECT_TRUE(txn2.commit().ok());
 	
@@ -443,7 +443,7 @@ TEST_P(LayerIterator, prev)
 	EXPECT_FALSE(iterator2.prev());
 	
 	// insert keys BEFORE this database (to first db1)
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 	transactionUpload(&txn1, test::begin_keys);
 	EXPECT_TRUE(txn1.commit().ok());	
 	
@@ -477,7 +477,7 @@ TEST_P(LayerIterator, prev)
 	EXPECT_FALSE(iterator1.prev());
 	
 	// insert keys AFTER this database
-	LevelDatabaseTransaction txn3 = db3.createTransaction();
+	LayerTransaction txn3 = db3.createTransaction();
 	transactionUpload(&txn3, test::end_keys);
 	EXPECT_TRUE(txn3.commit().ok());
 	

@@ -1,21 +1,21 @@
 #include "layer_db.h"
-#include "LevelDatabaseTransaction.h"
+#include "layer_transaction.h"
 
 using namespace test;
 
-INSTANTIATE_TEST_CASE_P(simpledata, LayerTransaction, ::testing::Values(no_keys, one_key, simple_keys));
+INSTANTIATE_TEST_CASE_P(simpledata, TestLayerTransaction, ::testing::Values(no_keys, one_key, simple_keys));
 
-void LayerTransaction::transactionUpload(LevelDatabaseTransaction* transaction, keyval values) 
+void TestLayerTransaction::transactionUpload(LayerTransaction* transaction, keyval values) 
 {		
 	for (const auto& row : values) {
 		transaction->Put(row.first, row.second);
 	}
 }
 
-TEST_P(LayerTransaction, put) 
+TEST_P(TestLayerTransaction, put) 
 {
 	keyval values = GetParam();
-	LevelDatabaseTransaction txn1 = db2.createTransaction();
+	LayerTransaction txn1 = db2.createTransaction();
 	
 	transactionUpload(&txn1, values);
 	simpleCheckData(&db2, values, false);
@@ -30,10 +30,10 @@ TEST_P(LayerTransaction, put)
 	// commit to other database
 }
 
-TEST_P(LayerTransaction, get) 
+TEST_P(TestLayerTransaction, get) 
 {
 	keyval values = GetParam();
-	LevelDatabaseTransaction txn1 = db2.createTransaction();
+	LayerTransaction txn1 = db2.createTransaction();
 	
 	transactionUpload(&txn1, values);
 	simpleCheckData(&db2, values, false);
@@ -45,10 +45,10 @@ TEST_P(LayerTransaction, get)
 	simpleCheckData(&db1, values, false);
 }
 
-TEST_P(LayerTransaction, del)
+TEST_P(TestLayerTransaction, del)
 {
 	keyval values = GetParam();
-	LevelDatabaseTransaction txn1 = db1.createTransaction();
+	LayerTransaction txn1 = db1.createTransaction();
 
 	transactionUpload(&txn1, values);
 	EXPECT_TRUE(txn1.commit().ok());

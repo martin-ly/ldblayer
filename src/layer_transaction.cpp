@@ -1,22 +1,22 @@
-#include "LevelDatabaseTransaction.h"
+#include "layer_transaction.h"
 #include "database.h"
 #include "layer.h"
 
 namespace ldblayer
 {
 
-LevelDatabaseTransaction::LevelDatabaseTransaction(Database* database, Layer* layer)
+	LayerTransaction::LayerTransaction(Database* database, Layer* layer)
 : db(database),
   activeLayer(layer)
 {
 }
 
-void LevelDatabaseTransaction::setActiveLayer(Layer* layer)
+void LayerTransaction::setActiveLayer(Layer* layer)
 {
 	activeLayer = layer;
 }
 
-void LevelDatabaseTransaction::Put(const std::string& key, const std::string& value)
+void LayerTransaction::Put(const std::string& key, const std::string& value)
 {
 	std::string put_key;
 	if (activeLayer) {
@@ -27,7 +27,7 @@ void LevelDatabaseTransaction::Put(const std::string& key, const std::string& va
 	writeBatch.Put(put_key, value);	
 }
 
-void LevelDatabaseTransaction::Delete(const std::string& key)
+void LayerTransaction::Delete(const std::string& key)
 {
 	std::string del_key;
 	if (activeLayer) {
@@ -38,7 +38,7 @@ void LevelDatabaseTransaction::Delete(const std::string& key)
 	writeBatch.Delete(del_key);
 }
 
-leveldb::Status LevelDatabaseTransaction::commit() 
+leveldb::Status LayerTransaction::commit() 
 {
 	leveldb::Status s;
 	s = db->Write(&writeBatch);

@@ -4,7 +4,7 @@ include_directories(${GTEST_INCLUDE_DIR})
 set(ldb_SRCS_CXX
     database.cpp
     layer.cpp
-    LevelDatabaseTransaction.cpp
+    layer_transaction.cpp
     LevelDatabaseIterator.cpp
 )
 
@@ -13,7 +13,7 @@ set(ldb_SRCS_HEADERS
     database_abstract.h
     database.h
     layer.h
-    LevelDatabaseTransaction.h
+    layer_transaction.h
     LevelDatabaseIterator.h
 )
 

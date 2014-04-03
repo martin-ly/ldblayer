@@ -42,13 +42,13 @@ protected:
 	void simpleCheckData(DatabaseAbstract* db, const keyval& values, bool expect = true);
 };
 
-class LayerTransaction : public LayerRaw 
+class TestLayerTransaction : public LayerRaw 
 {
 protected:
-	void transactionUpload(LevelDatabaseTransaction* transaction, keyval values);
+	void transactionUpload(LayerTransaction* transaction, keyval values);
 };
 
-class LayerIterator : public LayerTransaction 
+class LayerIterator : public TestLayerTransaction 
 {
 protected:
 	

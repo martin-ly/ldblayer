@@ -1,6 +1,6 @@
 #include "database.h"
 #include "layer.h"
-#include "LevelDatabaseTransaction.h"
+#include "layer_transaction.h"
 #include "LevelDatabaseIterator.h"
 
 #include <assert.h>
@@ -78,10 +78,10 @@ leveldb::Status Database::Write(leveldb::WriteBatch* batch)
 	return db->Write(writeOptions, batch);
 }
 
-LevelDatabaseTransaction Database::createTransaction()
+LayerTransaction Database::createTransaction()
 {
 	assert(db);
-	return LevelDatabaseTransaction(this);
+	return LayerTransaction(this);
 }
 
 LevelDatabaseIterator Database::createIterator()

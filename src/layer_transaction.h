@@ -10,10 +10,10 @@ namespace ldblayer
 class Database;
 class Layer;
 
-class LevelDatabaseTransaction 
+class LayerTransaction 
 {
 public:
-	LevelDatabaseTransaction(Database* database, Layer* layer = nullptr);    
+	LayerTransaction(Database* database, Layer* layer = nullptr);    
 	void setActiveLayer(Layer* layer);
     
 	void Put(const std::string& key, const std::string& value);

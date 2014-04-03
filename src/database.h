@@ -33,7 +33,7 @@ public:
 	Layer getLayer(const std::string& layerName);
 	void registerPrefix(const std::string& layer);
 
-	virtual LevelDatabaseTransaction createTransaction();
+	virtual LayerTransaction createTransaction();
 	virtual LevelDatabaseIterator createIterator();
 
 	leveldb::Iterator* createRawIterator();

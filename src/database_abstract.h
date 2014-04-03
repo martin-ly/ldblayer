@@ -6,7 +6,7 @@
 namespace ldblayer 
 {
 
-class LevelDatabaseTransaction;
+class LayerTransaction;
 class LevelDatabaseIterator;
 
 class DatabaseAbstract 
@@ -16,7 +16,7 @@ public:
 	virtual leveldb::Status Get(const std::string& key, std::string* value) = 0;
 	virtual leveldb::Status Del(const std::string& key) = 0;
 	
-	virtual LevelDatabaseTransaction createTransaction() = 0;
+	virtual LayerTransaction createTransaction() = 0;
 	virtual LevelDatabaseIterator createIterator() = 0;
 };
 

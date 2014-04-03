@@ -1,6 +1,6 @@
 #include "layer.h"
 #include "database.h"
-#include "LevelDatabaseTransaction.h"
+#include "layer_transaction.h"
 #include "LevelDatabaseIterator.h"
 
 namespace ldblayer 
@@ -54,9 +54,9 @@ leveldb::Status Layer::Del(const std::string& key)
 	return m_db->Del(key);
 }
 
-LevelDatabaseTransaction Layer::createTransaction() 
+LayerTransaction Layer::createTransaction() 
 {
-	return LevelDatabaseTransaction(m_db, this);
+	return LayerTransaction(m_db, this);
 }
 
 LevelDatabaseIterator Layer::createIterator()
