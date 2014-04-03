@@ -12,12 +12,13 @@ set(ldb_tests_SRCS_CXX
     layer_raw.cpp
     layer_transaction.cpp
     layer_iterator.cpp
+    memory_iterator.cpp
 )
 
 # .h headers
 set(ldb_tests_SRCS_HEADERS
     direct_db.h
-    layer_db.h    
+    layer_db.h
 )
 
 
