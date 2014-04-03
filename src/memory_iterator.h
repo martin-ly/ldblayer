@@ -26,8 +26,8 @@ public:
 	virtual bool prev();
 	virtual bool isValid() const;
 	
-	void seekToBegin();
-	void seekToEnd();
+	virtual void seekToBegin();
+	virtual void seekToEnd();
 	
 	bool isBegin() const;
 	bool isEnd() const;

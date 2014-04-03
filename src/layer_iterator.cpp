@@ -144,6 +144,18 @@ bool LayerIterator::seekToLast()
 	return m_isValid = false;
 }
 
+void LayerIterator::seekToBegin() 
+{
+	// layer iterator doesn't support this functions
+	throw std::exception();
+}
+
+void LayerIterator::seekToEnd() 
+{
+	// layer iterator doesn't support this functions
+	throw std::exception();
+}
+
 bool LayerIterator::seek(const std::string& key) 
 {
 	if (activeLayout) {

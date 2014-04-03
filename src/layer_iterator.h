@@ -24,6 +24,9 @@ public:
 	virtual bool prev();
 	virtual bool isValid() const noexcept { return m_isValid; }
 	
+	virtual void seekToBegin();
+	virtual void seekToEnd();
+	
 	virtual std::string key() const;
 	virtual std::string value() const;
 	
