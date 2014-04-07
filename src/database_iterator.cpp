@@ -9,25 +9,20 @@ DatabaseIterator::DatabaseIterator(Database* db, Layer* layout)
 	seekToFirst();
 }
 
-bool DatabaseIterator::seekToFirst() 
+void DatabaseIterator::seekToFirst() 
 {	
 	iterator.seekToFirst();
-	
+
 	start = false;
 	end = !iterator.isValid();
-	
-	return true;
 }
 
-bool DatabaseIterator::seekToLast() 
-{	
-	bool result;
-	result = iterator.seekToLast();	
+void DatabaseIterator::seekToLast() 
+{
+	iterator.seekToLast();	
 	
-	start = !result;
+	start = !iterator.isValid();
 	end = false;
-
-	return result;
 }
 
 void DatabaseIterator::seekToBegin() 
@@ -42,21 +37,19 @@ void DatabaseIterator::seekToEnd()
 	end = true;
 }
 
-bool DatabaseIterator::seek(const std::string& key) 
+void DatabaseIterator::seek(const std::string& key) 
 {	
 	iterator.seek(key);
 	start = false;
 	end = !iterator.isValid();
-
-	return true;
 }
 
-bool DatabaseIterator::next() 
+void DatabaseIterator::next() 
 {
 	assert( !end );
 	if (start) {
 		seekToFirst();
-		return true;
+		return;
 	}
 
 	if (iterator.isValid()) {
@@ -65,20 +58,17 @@ bool DatabaseIterator::next()
 		if (!iterator.isValid()) {
 			end = true;
 		}
-
 	} else {
 		end = true;
 	}
-
-	return true;
 }
 
-bool DatabaseIterator::prev() 
+void DatabaseIterator::prev() 
 {
 	assert( !start );
 	if (end) {
 		seekToLast();
-		return true;
+		return;
 	}
 
 	if (iterator.isValid()) {
@@ -90,8 +80,6 @@ bool DatabaseIterator::prev()
 	} else {
 		start = true;
 	}
-
-	return true;
 }
 
 bool DatabaseIterator::isValid() const 

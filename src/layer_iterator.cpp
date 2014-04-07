@@ -25,10 +25,10 @@ LayerIterator::~LayerIterator()
 		delete it;
 }
 
-bool LayerIterator::next() 
+void LayerIterator::next() 
 {   
 	if (!m_isValid) {
-		return false;
+		return;
 	}
 
 	it->Next();
@@ -37,20 +37,22 @@ bool LayerIterator::next()
 		if (activeLayout) {
 			const std::string key = it->key().ToString();
 			if (startsWith(activeLayout->getPrefix(), key)) {
-				return m_isValid = true;
+				m_isValid = true;
+				return;
 			}
 		} else {
-			return m_isValid = true;
+			m_isValid = true;
+			return;
 		}
 	}
 
-	return m_isValid = false;
+	m_isValid = false;
 }
 
-bool LayerIterator::prev() 
+void LayerIterator::prev() 
 {
 	if (!m_isValid) {
-		return false;
+		return;
 	}
 
 	it->Prev();
@@ -59,40 +61,44 @@ bool LayerIterator::prev()
 		if (activeLayout) {
 			const std::string key = it->key().ToString();
 			if (startsWith(activeLayout->getPrefix(), key)) {
-				return m_isValid = true;
+				m_isValid = true;
+				return;
 			}
 		} else {
-			return m_isValid = true;
+			m_isValid = true;
+			return;
 		}
 	}
 
-	return m_isValid = false;    
+	m_isValid = false;
 }
 
-bool LayerIterator::seekToFirst() 
+void LayerIterator::seekToFirst() 
 {
 	if (activeLayout) {
 		it->Seek(activeLayout->getPrefix());
 
 		if (!(m_isValid = it->Valid())) 
-			return false;
+			return;
 
 		const std::string key = it->key().ToString();
 		if (activeLayout) {
 			if (startsWith(activeLayout->getPrefix(), key)) {
-				return m_isValid = true;
+				m_isValid = true;
+				return;
 			} else {
-				return m_isValid = false;
+				m_isValid = false;
+				return;
 			}
 		}
 	} else {
 		it->SeekToFirst();
 	}
 
-	return m_isValid = it->Valid();
+	m_isValid = it->Valid();
 }
 
-bool LayerIterator::seekToLast() 
+void LayerIterator::seekToLast() 
 {
 	if (activeLayout) {
 		Database::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
@@ -112,18 +118,22 @@ bool LayerIterator::seekToLast()
 		} else {
 			// current prefix are last, so just navigate to last key;
 			it->SeekToLast();
-			if (!it->Valid())
-				return m_isValid = false;
+			if (!it->Valid()) {
+				m_isValid = false;
+				return;
+			}
 
 			const std::string& key = it->key().ToString();
-			return m_isValid = startsWith(activeLayout->getPrefix(), key);
+			m_isValid = startsWith(activeLayout->getPrefix(), key);
+			return;
 		}
 
 		if (it->Valid()) {	// we found first key of next database. So, point iter to prev. key
 			it->Prev();
 
 			if (!it->Valid()) {	// no prev. key, so no data
-				return (m_isValid = false);
+				m_isValid = false;
+				return;
 			}			
 		} else {	// we have no keys for next database, so just navigate to last database key
 			it->SeekToLast();			
@@ -133,15 +143,17 @@ bool LayerIterator::seekToLast()
 			// check, if this key belongs to current layout.
 			// SeekToLast can return key from prev. layout, if this layout doesn't contain any data
 			const std::string& key = it->key().ToString();
-			return m_isValid = startsWith(activeLayout->getPrefix(), key);
+			m_isValid = startsWith(activeLayout->getPrefix(), key);
+			return;
 		}
 		
 	} else {   
 		it->SeekToLast();
-		return m_isValid = it->Valid();
+		m_isValid = it->Valid();
+		return;
 	}
 
-	return m_isValid = false;
+	m_isValid = false;
 }
 
 void LayerIterator::seekToBegin() 
@@ -156,7 +168,7 @@ void LayerIterator::seekToEnd()
 	throw std::exception();
 }
 
-bool LayerIterator::seek(const std::string& key) 
+void LayerIterator::seek(const std::string& key) 
 {
 	if (activeLayout) {
 		std::string seek_key = activeLayout->getPrefix();
@@ -168,15 +180,17 @@ bool LayerIterator::seek(const std::string& key)
 			const std::string& foundKey = it->key().ToString();
 
 			if (startsWith(activeLayout->getPrefix(), foundKey)) {
-				return m_isValid = true;
+				m_isValid = true;
+				return;
 			}
 		}
 	} else {
 		it->Seek(key);
-		return m_isValid = it->Valid();
+		m_isValid = it->Valid();
+		return;
 	}
 
-	return m_isValid = false;
+	m_isValid = false;
 }
 
 std::string LayerIterator::key() const { 

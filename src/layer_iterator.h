@@ -24,11 +24,11 @@ public:
 	LayerIterator(Database* db, Layer* layout = nullptr);
 	~LayerIterator();
     
-	virtual bool seekToFirst();
-	virtual bool seekToLast();
-	virtual bool seek(const std::string& key);
-	virtual bool next();
-	virtual bool prev();
+	virtual void seekToFirst();
+	virtual void seekToLast();
+	virtual void seek(const std::string& key);
+	virtual void next();
+	virtual void prev();
 	virtual bool isValid() const noexcept { return m_isValid; }
 	
 	/**

@@ -14,10 +14,11 @@ TEST_P(Iterator, seek_to_first)
     
     keyval values = GetParam();
     
+	iterator.seekToFirst();
     if (!values.empty()) {
-        EXPECT_TRUE(iterator.seekToFirst());    
+        EXPECT_TRUE(iterator.isValid());
     } else {
-        EXPECT_FALSE(iterator.seekToFirst());    
+		EXPECT_FALSE(iterator.isValid());
     }
 }
 
@@ -28,10 +29,11 @@ TEST_P(Iterator, seek_to_last)
 	LayerIterator iterator = db.createIterator();
     
     keyval values = GetParam();    
+	iterator.seekToLast();
     if (!values.empty()) {
-        EXPECT_TRUE(iterator.seekToLast());    
+        EXPECT_TRUE(iterator.isValid());
     } else {
-        EXPECT_FALSE(iterator.seekToLast());    
+		EXPECT_FALSE(iterator.isValid());
     }
 }
 
@@ -45,25 +47,28 @@ TEST_P(Iterator, seek)
    
 
     if (values.empty()) {       
-        EXPECT_FALSE(iterator.seek(""));        
+		iterator.seek("");
+        EXPECT_FALSE(iterator.isValid());        
         return;
     }
     
     for (auto i = values.rbegin(); i != values.rend(); i++) {
-        EXPECT_TRUE(iterator.seek(i->first));
+		iterator.seek(i->first);
+        EXPECT_TRUE(iterator.isValid());
     }    
     
     // seek non exist key, that should be lexicography first
-    EXPECT_TRUE(iterator.seek("a")) << "leveldb found: " << iterator.key() << " - " << iterator.value();
+    iterator.seek("a");
+    EXPECT_TRUE(iterator.isValid()) << "leveldb found: " << iterator.key() << " - " << iterator.value();
     EXPECT_EQ(iterator.key(), "key_a");
     EXPECT_EQ(iterator.value(), "data_a");
     
 	// seek non exist key that lexicography should be the last
-	EXPECT_FALSE(iterator.seek("zzzzzzzzzzzzz"));
+	iterator.seek("zzzzzzzzzzzzz");
 	EXPECT_FALSE(iterator.isValid());
 	
 	// seek non exist key that lexicography exist
-	EXPECT_TRUE(iterator.seek("a_ke"));
+	iterator.seek("a_ke");
 	EXPECT_TRUE(iterator.isValid());
 	EXPECT_EQ(iterator.key(), "key_a");
 }
@@ -87,7 +92,8 @@ TEST_P(Iterator, next)
     }
     
     // we are already at the end
-    EXPECT_FALSE(db_iterator.next());
+    db_iterator.next();
+    EXPECT_FALSE(db_iterator.isValid());
     
     if (values.empty()) {
         return;
@@ -97,21 +103,23 @@ TEST_P(Iterator, next)
     const std::string lastKey = values.back().first;
     const std::string lastValue= values.back().second;
     
-    EXPECT_TRUE(db_iterator.seek(lastKey));
+	db_iterator.seek(lastKey);
+    EXPECT_TRUE(db_iterator.isValid());
     EXPECT_EQ(db_iterator.key(), lastKey);
     EXPECT_EQ(db_iterator.value(), lastValue);
     
     // we are already at the end
-    EXPECT_FALSE(db_iterator.next());
+	db_iterator.next();    
     EXPECT_FALSE(db_iterator.isValid());
     
     // should be the same
-    EXPECT_TRUE(db_iterator.seekToLast());
+	db_iterator.seekToLast();
+    EXPECT_TRUE(db_iterator.isValid());
     EXPECT_EQ(db_iterator.key(), lastKey);
     EXPECT_EQ(db_iterator.value(), lastValue);
     
     // we are already at the end
-    EXPECT_FALSE(db_iterator.next());
+	db_iterator.next();
     EXPECT_FALSE(db_iterator.isValid());
     
     // check seek to first and next

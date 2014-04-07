@@ -31,18 +31,18 @@ TEST_P(TestLayerIterator, seek_to_first)
 	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
-		EXPECT_FALSE(iterator2.seekToFirst());    
+		iterator2.seekToFirst();    
 		EXPECT_FALSE(iterator2.isValid());    
 		return;
 	}
 		
-	EXPECT_TRUE(iterator2.seekToFirst());
+	iterator2.seekToFirst();
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
 	// check if empty layouts realy empty
-	EXPECT_FALSE(iterator1.seekToFirst());
+	iterator1.seekToFirst();
 	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
@@ -56,17 +56,17 @@ TEST_P(TestLayerIterator, seek_to_first)
 	iterator3.reopen();
 	
 	// check if layots iterators still return correct data
-	EXPECT_TRUE(iterator1.seekToFirst());
+	iterator1.seekToFirst();
 	EXPECT_TRUE(iterator1.isValid());
 	EXPECT_EQ(test::begin_keys.begin()->first, iterator1.key());
 	EXPECT_EQ(test::begin_keys.begin()->second, iterator1.value());
 	
-	EXPECT_TRUE(iterator2.seekToFirst());
+	iterator2.seekToFirst();
 	EXPECT_TRUE(iterator2.isValid());	
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
-	EXPECT_FALSE(iterator3.seekToFirst());
+	iterator3.seekToFirst();
 	EXPECT_FALSE(iterator3.isValid());
 }
 
@@ -84,21 +84,21 @@ TEST_P(TestLayerIterator, seek_to_last)
 	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
-		EXPECT_FALSE(iterator2.seekToLast());    
+		iterator2.seekToLast();    
 		EXPECT_FALSE(iterator2.isValid());    
 		return;
 	}
 	
-	EXPECT_TRUE(iterator2.seekToLast());
+	iterator2.seekToLast();
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.rbegin()->first, iterator2.key());
 	EXPECT_EQ(values.rbegin()->second, iterator2.value());
 
 	// check if empty layouts realy empty
-	EXPECT_FALSE(iterator1.seekToFirst());
+	iterator1.seekToFirst();
 	EXPECT_FALSE(iterator1.isValid());
 	
-	EXPECT_FALSE(iterator3.seekToFirst());
+	iterator3.seekToFirst();
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
@@ -112,17 +112,17 @@ TEST_P(TestLayerIterator, seek_to_last)
 	iterator3.reopen();
 	
 	// check if layots iterators still return correct data
-	EXPECT_TRUE(iterator1.seekToLast());
+	iterator1.seekToLast();
 	EXPECT_TRUE(iterator1.isValid());
 	EXPECT_EQ(test::begin_keys.rbegin()->first, iterator1.key());
 	EXPECT_EQ(test::begin_keys.rbegin()->second, iterator1.value());
 	
-	EXPECT_TRUE(iterator2.seekToLast());
+	iterator2.seekToLast();
 	EXPECT_TRUE(iterator2.isValid());	
 	EXPECT_EQ(values.rbegin()->first, iterator2.key());
 	EXPECT_EQ(values.rbegin()->second, iterator2.value());
 	
-	EXPECT_FALSE(iterator3.seekToFirst());
+	iterator3.seekToFirst();
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys AFTER this database
@@ -136,17 +136,17 @@ TEST_P(TestLayerIterator, seek_to_last)
 	iterator3.reopen();
 	
 	// check if layots iterators still return correct data
-	EXPECT_TRUE(iterator1.seekToLast());
+	iterator1.seekToLast();
 	EXPECT_TRUE(iterator1.isValid());
 	EXPECT_EQ(test::begin_keys.rbegin()->first, iterator1.key());
 	EXPECT_EQ(test::begin_keys.rbegin()->second, iterator1.value());
 	
-	EXPECT_TRUE(iterator2.seekToLast());
+	iterator2.seekToLast();
 	EXPECT_TRUE(iterator2.isValid());	
 	EXPECT_EQ(values.rbegin()->first, iterator2.key());
 	EXPECT_EQ(values.rbegin()->second, iterator2.value());
 	
-	EXPECT_TRUE(iterator3.seekToLast());
+	iterator3.seekToLast();
 	EXPECT_TRUE(iterator3.isValid());	
 	EXPECT_EQ(test::end_keys.rbegin()->first, iterator3.key());
 	EXPECT_EQ(test::end_keys.rbegin()->second, iterator3.value());
@@ -166,22 +166,22 @@ TEST_P(TestLayerIterator, seek)
 	LayerIterator iterator3 = db3.createIterator();
 	
 	if (values.empty()) {
-		EXPECT_FALSE(iterator2.seekToLast());    
+		iterator2.seekToLast();
 		EXPECT_FALSE(iterator2.isValid());    
 		return;
 	}
 	
 	std::string value;
-	EXPECT_TRUE(iterator2.seek(values.begin()->first));
+	iterator2.seek(values.begin()->first);
 	EXPECT_TRUE(iterator2.isValid());
 	
 	// check if we search for first element (the same as seekToFirst)
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
-	EXPECT_FALSE(iterator1.seek(values.begin()->first));
+	iterator1.seek(values.begin()->first);
 	EXPECT_FALSE(iterator1.isValid());
-	EXPECT_FALSE(iterator3.seek(values.begin()->first));
+	iterator3.seek(values.begin()->first);
 	EXPECT_FALSE(iterator3.isValid());
 	
 	if (values.size() == 1)
@@ -191,7 +191,7 @@ TEST_P(TestLayerIterator, seek)
 	auto i = values.begin();
 	++i;
 	
-	EXPECT_TRUE(iterator2.seek(i->first));
+	iterator2.seek(i->first);
 	EXPECT_TRUE(iterator2.isValid());
 	
 	// check if we search for first element (the same as seekToFirst)
@@ -199,11 +199,11 @@ TEST_P(TestLayerIterator, seek)
 	EXPECT_EQ(i->second, iterator2.value());
 	
 	// seek non exist key that never exists on any test data
-	EXPECT_FALSE(iterator2.seek("zzzzzzzzzzzzz"));
+	iterator2.seek("zzzzzzzzzzzzz");
 	EXPECT_FALSE(iterator2.isValid());
 	
 	// seek non exist key that lexicography exist
-	EXPECT_TRUE(iterator2.seek("a"));
+	iterator2.seek("a");
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
@@ -221,18 +221,18 @@ TEST_P(TestLayerIterator, seek)
 	iterator3.reopen();
 
 	// check if we search for first element (the same as seekToFirst)
-	EXPECT_TRUE(iterator2.seek(values.begin()->first));
+	iterator2.seek(values.begin()->first);
 	EXPECT_TRUE(iterator2.isValid());	
 	
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
-	EXPECT_TRUE(iterator1.seek(begin_keys.begin()->first));
+	iterator1.seek(begin_keys.begin()->first);
 	EXPECT_TRUE(iterator1.isValid());
 	EXPECT_EQ(test::begin_keys.begin()->first, iterator1.key());
 	EXPECT_EQ(test::begin_keys.begin()->second, iterator1.value());
 	
-	EXPECT_FALSE(iterator3.seek(values.begin()->first));
+	iterator3.seek(values.begin()->first);
 	EXPECT_FALSE(iterator3.isValid());
 	
 	if (values.size() == 1)
@@ -242,7 +242,7 @@ TEST_P(TestLayerIterator, seek)
 	i = values.begin();
 	++i;
 	
-	EXPECT_TRUE(iterator2.seek(i->first));
+	iterator2.seek(i->first);
 	EXPECT_TRUE(iterator2.isValid());
 	
 	// check if we search for first element (the same as seekToFirst)
@@ -250,18 +250,19 @@ TEST_P(TestLayerIterator, seek)
 	EXPECT_EQ(i->second, iterator2.value());
 	
 	// seek non exist key that never exists on any test data
-	EXPECT_FALSE(iterator2.seek("zzzzzzzzzzzzz"));
+	iterator2.seek("zzzzzzzzzzzzz");
 	EXPECT_FALSE(iterator2.isValid());
 	
 	// seek non exist key that lexicography exist
-	EXPECT_TRUE(iterator2.seek("a"));
+	iterator2.seek("a");
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
 	// try to seek existing key, but from other database	
 	if (values.begin()->first != begin_keys.begin()->first)  {
-		EXPECT_FALSE(iterator1.seek(values.begin()->first)) << values.begin()->first;
+		iterator1.seek(values.begin()->first);
+		EXPECT_FALSE(iterator1.isValid()) << values.begin()->first;
 	}
 	
 	// end of test block
@@ -277,18 +278,18 @@ TEST_P(TestLayerIterator, seek)
 	iterator3.reopen();
 	
 	// check if we search for first element (the same as seekToFirst)
-	EXPECT_TRUE(iterator2.seek(values.begin()->first));
+	iterator2.seek(values.begin()->first);
 	EXPECT_TRUE(iterator2.isValid());	
 	
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
-	EXPECT_TRUE(iterator1.seek(begin_keys.begin()->first));
+	iterator1.seek(begin_keys.begin()->first);
 	EXPECT_TRUE(iterator1.isValid());
 	EXPECT_EQ(test::begin_keys.begin()->first, iterator1.key());
 	EXPECT_EQ(test::begin_keys.begin()->second, iterator1.value());
 	
-	EXPECT_TRUE(iterator3.seek(end_keys.begin()->first));
+	iterator3.seek(end_keys.begin()->first);
 	EXPECT_TRUE(iterator3.isValid());
 	EXPECT_EQ(test::end_keys.begin()->first, iterator3.key());
 	EXPECT_EQ(test::end_keys.begin()->second, iterator3.value());
@@ -300,7 +301,7 @@ TEST_P(TestLayerIterator, seek)
 	i = values.begin();
 	++i;
 	
-	EXPECT_TRUE(iterator2.seek(i->first));
+	iterator2.seek(i->first);
 	EXPECT_TRUE(iterator2.isValid());
 	
 	// check if we search for first element (the same as seekToFirst)
@@ -308,18 +309,19 @@ TEST_P(TestLayerIterator, seek)
 	EXPECT_EQ(i->second, iterator2.value());
 	
 	// seek non exist key that never exists on any test data
-	EXPECT_FALSE(iterator2.seek("zzzzzzzzzzzzz"));
+	iterator2.seek("zzzzzzzzzzzzz");
 	EXPECT_FALSE(iterator2.isValid());
 	
 	// seek non exist key that lexicography exist (first key)
-	EXPECT_TRUE(iterator2.seek("a"));
+	iterator2.seek("a");
 	EXPECT_TRUE(iterator2.isValid());
 	EXPECT_EQ(values.begin()->first, iterator2.key());
 	EXPECT_EQ(values.begin()->second, iterator2.value());
 	
 	// try to seek existing key, but from other database	
 	if (values.begin()->first != begin_keys.begin()->first)  {
-		EXPECT_FALSE(iterator1.seek(values.begin()->first)) << values.begin()->first;
+		iterator1.seek(values.begin()->first);
+		EXPECT_FALSE(iterator1.isValid()) << values.begin()->first;
 	}	
 }
 
@@ -353,8 +355,10 @@ TEST_P(TestLayerIterator, next)
 	
 	EXPECT_EQ(values.size(), count);
 	
-	EXPECT_TRUE(iterator2.seekToLast());
-	EXPECT_FALSE(iterator2.next());
+	iterator2.seekToLast();
+	EXPECT_TRUE(iterator2.isValid());
+	iterator2.next();
+	EXPECT_FALSE(iterator2.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
 	LayerTransaction txn1 = db1.createTransaction();
@@ -387,8 +391,10 @@ TEST_P(TestLayerIterator, next)
 	
 	EXPECT_EQ(begin_keyes_sorted.size(), count);
 	
-	EXPECT_TRUE(iterator1.seekToLast());
-	EXPECT_FALSE(iterator1.next());
+	iterator1.seekToLast();
+	EXPECT_TRUE(iterator1.isValid());
+	iterator1.next();
+	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys AFTER this database
 	LayerTransaction txn3 = db3.createTransaction();
@@ -439,8 +445,10 @@ TEST_P(TestLayerIterator, prev)
 	
 	EXPECT_EQ(values.size(), count);
 	
-	EXPECT_TRUE(iterator2.seekToFirst());
-	EXPECT_FALSE(iterator2.prev());
+	iterator2.seekToFirst();
+	EXPECT_TRUE(iterator2.isValid());
+	iterator2.prev();
+	EXPECT_FALSE(iterator2.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
 	LayerTransaction txn1 = db1.createTransaction();
@@ -473,8 +481,10 @@ TEST_P(TestLayerIterator, prev)
 	
 	EXPECT_EQ(begin_keyes_sorted.size(), count);
 	
-	EXPECT_TRUE(iterator1.seekToFirst());
-	EXPECT_FALSE(iterator1.prev());
+	iterator1.seekToFirst();
+	EXPECT_TRUE(iterator1.isValid());
+	iterator1.prev();
+	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys AFTER this database
 	LayerTransaction txn3 = db3.createTransaction();

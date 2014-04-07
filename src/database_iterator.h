@@ -11,13 +11,13 @@ class DatabaseIterator : public IteratorAbstract
 public:
 	DatabaseIterator(Database* db, Layer* layout = nullptr);
 
-	virtual bool seekToFirst();
-	virtual bool seekToLast();
+	virtual void seekToFirst();
+	virtual void seekToLast();
 	virtual void seekToBegin();
 	virtual void seekToEnd();
-	virtual bool seek(const std::string& key);
-	virtual bool next();
-	virtual bool prev();
+	virtual void seek(const std::string& key);
+	virtual void next();
+	virtual void prev();
 	virtual bool isValid() const;
 	
 	virtual std::string key() const;

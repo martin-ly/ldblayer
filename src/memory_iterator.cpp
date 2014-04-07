@@ -26,54 +26,44 @@ MemoryIterator& MemoryIterator::operator= (iterator_t iter)
 	return *this;
 }
 
-bool MemoryIterator::seekToFirst() 
+void MemoryIterator::seekToFirst() 
 {
 	iterator = buffer->begin();
 	start = false;
-	
-	return isValid();
 }
 
-bool MemoryIterator::seekToLast() 
+void MemoryIterator::seekToLast() 
 {	
 	start = buffer->empty();
 	if (!start) iterator = --buffer->end();
-	
-	return isValid();
 }
 
-bool MemoryIterator::seek(const std::string& key) 
+void MemoryIterator::seek(const std::string& key) 
 {
 	iterator = buffer->find(key);
 	start = false;
-
-	return isValid();
 }
 
-bool MemoryIterator::next() 
+void MemoryIterator::next() 
 {
 	if (isEnd())
-		return false;
+		return;
 
 	if (start)
 		start = false;
 	else
 		++iterator;
-
-	return isValid();
 }
 
-bool MemoryIterator::prev() 
+void MemoryIterator::prev() 
 {
 	if (isBegin())
-		return false;
+		return;
 	
 	if (iterator == buffer->begin())	
 		seekToBegin();
 	else	
 		--iterator;
-	
-	return isValid();
 }
 
 bool MemoryIterator::isValid() const 
