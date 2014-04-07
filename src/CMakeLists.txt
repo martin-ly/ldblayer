@@ -7,6 +7,7 @@ set(ldb_SRCS_CXX
 	layer_transaction.cpp
 	layer_iterator.cpp
 	memory_iterator.cpp
+	database_iterator.cpp
 )
 
 # .h headers
@@ -19,6 +20,7 @@ set(ldb_SRCS_HEADERS
 	layer_transaction.h
 	layer_iterator.h
 	memory_iterator.h
+	database_iterator.h
 )
 
 add_library(ldblayer SHARED ${ldb_SRCS_CXX} ${ldb_SRCS_HEADERS})

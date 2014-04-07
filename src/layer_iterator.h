@@ -11,6 +11,13 @@ namespace ldblayer
 class Database;
 class Layer;
 
+/**
+ * LayerIterator provide same functionality as leveldb::Iterator,
+ * but know about existing prefixes in database and navigates only
+ * in prefix database
+ * Use this class in situation, where you need the same behaviour as
+ * leveldb::Iterator class
+ */
 class LayerIterator : public IteratorAbstract
 {
 public:
@@ -24,15 +31,24 @@ public:
 	virtual bool prev();
 	virtual bool isValid() const noexcept { return m_isValid; }
 	
+	/**
+	 * Doesn't supported with this class
+	 * @exception std::exception
+	 */
 	virtual void seekToBegin();
+
+	/**
+	 * Doesn't supported with this class
+	 * @exception std::exception
+	 */
 	virtual void seekToEnd();
 	
 	virtual std::string key() const;
 	virtual std::string value() const;
-	
+
 	void reopen();
 
-	std::string operator* () const { return value(); }	
+	std::string operator* () const { return value(); }
 	void setLayout(Layer* layout) { activeLayout = layout; }
 private:    
 	Database* database;

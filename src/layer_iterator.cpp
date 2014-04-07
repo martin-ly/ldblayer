@@ -181,7 +181,7 @@ bool LayerIterator::seek(const std::string& key)
 
 std::string LayerIterator::key() const { 
 	std::string key;
-	
+
 	if (m_isValid) {
 		assert(it->Valid());		
 		if (activeLayout) {
