@@ -89,13 +89,11 @@ bool DatabaseIterator::isValid() const
 
 std::string DatabaseIterator::key() const 
 {
-	assert(iterator.isValid());	// check if we really can get key
 	return iterator.key();
 }
 
 std::string DatabaseIterator::value() const 
 {
-	assert(iterator.isValid());	// check if we really can get value
 	return iterator.value();
 }
 
