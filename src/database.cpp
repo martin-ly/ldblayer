@@ -1,6 +1,6 @@
 #include "database.h"
 #include "layer.h"
-#include "layer_transaction.h"
+#include "database_transaction.h"
 #include "layer_iterator.h"
 #include "defs.h"
 
@@ -100,10 +100,10 @@ leveldb::Status Database::Write(leveldb::WriteBatch* batch)
 	return db->Write(writeOptions, batch);
 }
 
-LayerTransaction Database::createTransaction()
+std::unique_ptr<TransactionAbstract> Database::createTransaction()
 {
 	assert(db);
-	return LayerTransaction(this);
+	return std::unique_ptr<TransactionAbstract> (new DatabaseTransaction(this));
 }
 
 LayerIterator Database::createIterator()

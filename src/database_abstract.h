@@ -2,11 +2,12 @@
 #define DATABASE_ABSTRACT_H
 
 #include <leveldb/status.h>
+#include <memory>
 
 namespace ldblayer 
 {
 
-class LayerTransaction;
+class TransactionAbstract;
 class LayerIterator;
 
 class DatabaseAbstract 
@@ -18,7 +19,7 @@ public:
 	
 	virtual void close() = 0;
 	
-	virtual LayerTransaction createTransaction() = 0;
+	virtual std::unique_ptr<TransactionAbstract> createTransaction() = 0;
 	virtual LayerIterator createIterator() = 0;
 };
 

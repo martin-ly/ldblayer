@@ -5,47 +5,38 @@
 namespace ldblayer
 {
 
-	LayerTransaction::LayerTransaction(Database* database, Layer* layer)
-: db(database),
-  activeLayer(layer)
+LayerTransaction::LayerTransaction(Layer* layer)
+:activeLayer(layer)
 {
+	assert(layer);
 }
 
 void LayerTransaction::setActiveLayer(Layer* layer)
 {
+	assert(layer);
 	activeLayer = layer;
 }
 
 void LayerTransaction::Put(const std::string& key, const std::string& value)
 {
-	std::string put_key;
-	if (activeLayer) {
-		put_key = activeLayer->getPrefix();
-	}
-
-	put_key += key;
+	std::string put_key = activeLayer->getPrefix() + key;
 	writeBatch.Put(put_key, value);	
 }
 
 void LayerTransaction::Delete(const std::string& key)
 {
-	std::string del_key;
-	if (activeLayer) {
-		del_key = activeLayer->getPrefix();
-	}
-
-	del_key += key;
+	std::string del_key = activeLayer->getPrefix() + key;
 	writeBatch.Delete(del_key);
 }
 
-leveldb::Status LayerTransaction::commit() 
+bool LayerTransaction::commit() 
 {
 	leveldb::Status s;
-	s = db->Write(&writeBatch);
+	s = activeLayer->db()->Write(&writeBatch);
 	if (s.ok())
 		writeBatch.Clear();
 
-	return s;
+	return s.ok();
 }
 
 } // end of namespace

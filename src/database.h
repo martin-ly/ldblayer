@@ -35,7 +35,7 @@ public:
 	Layer getLayer(const std::string& layerName);
 	leveldb::Status registerPrefix(const std::string& layer);
 
-	virtual LayerTransaction createTransaction();
+	virtual std::unique_ptr<TransactionAbstract> createTransaction();
 	virtual LayerIterator createIterator();
 
 	leveldb::Iterator* createRawIterator();

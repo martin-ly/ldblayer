@@ -21,7 +21,7 @@ public:
 	virtual leveldb::Status Get(const std::string& key, std::string* value);
 	virtual leveldb::Status Del(const std::string& key);
 	
-	virtual LayerTransaction createTransaction();
+	virtual std::unique_ptr<TransactionAbstract> createTransaction();
 	virtual LayerIterator createIterator();
 
 	const std::string& getPrefix() const noexcept { return prefix; }   

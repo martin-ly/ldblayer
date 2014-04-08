@@ -100,7 +100,7 @@ std::string DatabaseIterator::value() const
 void DatabaseIterator::save()
 {
 	if (iterator.isValid()) {
-		savedKey = iterator.key();		
+		savedKey = iterator.key();
 	} else {
 		savedKey.clear();
 	}
@@ -109,7 +109,7 @@ void DatabaseIterator::save()
 void DatabaseIterator::restore()
 {
 	iterator.reopen();
-	
+
 	if (!savedKey.empty()) {
 		seek(savedKey);
 	}

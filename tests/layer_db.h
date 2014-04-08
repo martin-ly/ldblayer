@@ -45,7 +45,7 @@ protected:
 class TestLayerTransaction : public LayerRaw 
 {
 protected:
-	void transactionUpload(LayerTransaction* transaction, keyval values);
+	void transactionUpload(std::unique_ptr<TransactionAbstract>& transaction, keyval values);
 };
 
 class TestLayerIterator : public TestLayerTransaction 

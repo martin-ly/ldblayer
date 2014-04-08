@@ -3,6 +3,7 @@
 
 #include <string>
 #include <leveldb/write_batch.h>
+#include "transaction_abstract.h"
 
 namespace ldblayer
 {
@@ -10,16 +11,16 @@ namespace ldblayer
 class Database;
 class Layer;
 
-class LayerTransaction 
+class LayerTransaction : public TransactionAbstract
 {
 public:
-	LayerTransaction(Database* database, Layer* layer = nullptr);    
+	LayerTransaction(Layer* layer = nullptr);    
 	void setActiveLayer(Layer* layer);
     
 	void Put(const std::string& key, const std::string& value);
 	void Delete(const std::string& key);
     
-	leveldb::Status commit();
+	bool commit();
 private:
 	Database* db;
 	Layer* activeLayer;

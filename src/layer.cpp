@@ -57,9 +57,9 @@ leveldb::Status Layer::Del(const std::string& key)
 	return m_db->Del(key);
 }
 
-LayerTransaction Layer::createTransaction() 
+std::unique_ptr<TransactionAbstract> Layer::createTransaction() 
 {
-	return LayerTransaction(m_db, this);
+	return std::unique_ptr<TransactionAbstract>( new LayerTransaction(this) );
 }
 
 LayerIterator Layer::createIterator()
@@ -67,7 +67,7 @@ LayerIterator Layer::createIterator()
 	assert(m_db);
 
 	LayerIterator iterator = m_db->createIterator();
-	iterator.setLayout(this);	
+	iterator.setLayout(this);
 	
 	return iterator;
 }

@@ -6,13 +6,13 @@ INSTANTIATE_TEST_CASE_P(simpledata, Transaction, ::testing::Values(no_keys, one_
 
 void Transaction::transactionUpload()
 {
-	LayerTransaction transaction = db.createTransaction();
+	std::unique_ptr<TransactionAbstract> transaction = db.createTransaction();
     keyval values = GetParam();
     for (auto i = values.rbegin(); i != values.rend(); i++) {
-        transaction.Put(i->first, i->second);
+        transaction->Put(i->first, i->second);
     }
     
-    EXPECT_TRUE(transaction.commit().ok());
+    EXPECT_TRUE(transaction->commit());
 }
 
 TEST_P(Transaction, put) 
@@ -25,13 +25,13 @@ TEST_P(Transaction, del)
 {
     transactionUpload();
     
-    LayerTransaction transaction = db.createTransaction();
+	std::unique_ptr<TransactionAbstract> transaction = db.createTransaction();
     keyval values = GetParam();
     for (auto row: values) {
-        transaction.Put(row.first, row.second);
+        transaction->Put(row.first, row.second);
     }
     
-    EXPECT_TRUE(transaction.commit().ok());
+    EXPECT_TRUE(transaction->commit());
     
     simpleCheckData();
 }

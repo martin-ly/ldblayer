@@ -22,9 +22,9 @@ TEST_P(TestLayerIterator, seek_to_first)
 {
 	keyval values = GetParam();
 	
-	LayerTransaction txn2 = db2.createTransaction();
-	transactionUpload(&txn2, values);
-	EXPECT_TRUE(txn2.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn2 = db2.createTransaction();
+	transactionUpload(txn2, values);
+	EXPECT_TRUE(txn2->commit());
 		
 	LayerIterator iterator1 = db1.createIterator();
 	LayerIterator iterator2 = db2.createIterator();
@@ -46,9 +46,9 @@ TEST_P(TestLayerIterator, seek_to_first)
 	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LayerTransaction txn1 = db1.createTransaction();
-	transactionUpload(&txn1, test::begin_keys);
-	EXPECT_TRUE(txn1.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn1 = db1.createTransaction();
+	transactionUpload(txn1, test::begin_keys);
+	EXPECT_TRUE(txn1->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -75,9 +75,9 @@ TEST_P(TestLayerIterator, seek_to_last)
 {
 	keyval values = GetParam();
 	
-	LayerTransaction txn2 = db2.createTransaction();
-	transactionUpload(&txn2, values);
-	EXPECT_TRUE(txn2.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn2 = db2.createTransaction();
+	transactionUpload(txn2, values);
+	EXPECT_TRUE(txn2->commit());
 	
 	LayerIterator iterator1 = db1.createIterator();
 	LayerIterator iterator2 = db2.createIterator();
@@ -102,9 +102,9 @@ TEST_P(TestLayerIterator, seek_to_last)
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LayerTransaction txn1 = db1.createTransaction();
-	transactionUpload(&txn1, test::begin_keys);
-	EXPECT_TRUE(txn1.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn1 = db1.createTransaction();
+	transactionUpload(txn1, test::begin_keys);
+	EXPECT_TRUE(txn1->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -126,9 +126,9 @@ TEST_P(TestLayerIterator, seek_to_last)
 	EXPECT_FALSE(iterator3.isValid());
 	
 	// insert keys AFTER this database
-	LayerTransaction txn3 = db3.createTransaction();
-	transactionUpload(&txn3, test::end_keys);
-	EXPECT_TRUE(txn3.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn3 = db3.createTransaction();
+	transactionUpload(txn3, test::end_keys);
+	EXPECT_TRUE(txn3->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -157,9 +157,9 @@ TEST_P(TestLayerIterator, seek)
 {
 	keyval values = GetParam();
 	
-	LayerTransaction txn2 = db2.createTransaction();
-	transactionUpload(&txn2, values);
-	EXPECT_TRUE(txn2.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn2 = db2.createTransaction();
+	transactionUpload(txn2, values);
+	EXPECT_TRUE(txn2->commit());
 	
 	LayerIterator iterator1 = db1.createIterator();
 	LayerIterator iterator2 = db2.createIterator();
@@ -211,9 +211,9 @@ TEST_P(TestLayerIterator, seek)
 	// end of test block
 	
 	// insert keys BEFORE this database (to first db1)
-	LayerTransaction txn1 = db1.createTransaction();
-	transactionUpload(&txn1, test::begin_keys);
-	EXPECT_TRUE(txn1.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn1 = db1.createTransaction();
+	transactionUpload(txn1, test::begin_keys);
+	EXPECT_TRUE(txn1->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -268,9 +268,9 @@ TEST_P(TestLayerIterator, seek)
 	// end of test block
 	
 	// insert keys AFTER this database
-	LayerTransaction txn3 = db3.createTransaction();
-	transactionUpload(&txn3, test::end_keys);
-	EXPECT_TRUE(txn3.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn3 = db3.createTransaction();
+	transactionUpload(txn3, test::end_keys);
+	EXPECT_TRUE(txn3->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -330,9 +330,9 @@ TEST_P(TestLayerIterator, next)
 {
 	keyval values = GetParam();
 	
-	LayerTransaction txn2 = db2.createTransaction();
-	transactionUpload(&txn2, values);
-	EXPECT_TRUE(txn2.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn2 = db2.createTransaction();
+	transactionUpload(txn2, values);
+	EXPECT_TRUE(txn2->commit());
 	
 	LayerIterator iterator1 = db1.createIterator();
 	LayerIterator iterator2 = db2.createIterator();
@@ -361,9 +361,9 @@ TEST_P(TestLayerIterator, next)
 	EXPECT_FALSE(iterator2.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LayerTransaction txn1 = db1.createTransaction();
-	transactionUpload(&txn1, test::begin_keys);
-	EXPECT_TRUE(txn1.commit().ok());	
+	std::unique_ptr<TransactionAbstract> txn1 = db1.createTransaction();
+	transactionUpload(txn1, test::begin_keys);
+	EXPECT_TRUE(txn1->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -397,9 +397,9 @@ TEST_P(TestLayerIterator, next)
 	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys AFTER this database
-	LayerTransaction txn3 = db3.createTransaction();
-	transactionUpload(&txn3, test::end_keys);
-	EXPECT_TRUE(txn3.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn3 = db3.createTransaction();
+	transactionUpload(txn3, test::end_keys);
+	EXPECT_TRUE(txn3->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -420,9 +420,9 @@ TEST_P(TestLayerIterator, prev)
 {
 	keyval values = GetParam();
 	
-	LayerTransaction txn2 = db2.createTransaction();
-	transactionUpload(&txn2, values);
-	EXPECT_TRUE(txn2.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn2 = db2.createTransaction();
+	transactionUpload(txn2, values);
+	EXPECT_TRUE(txn2->commit());
 	
 	LayerIterator iterator1 = db1.createIterator();
 	LayerIterator iterator2 = db2.createIterator();
@@ -451,9 +451,9 @@ TEST_P(TestLayerIterator, prev)
 	EXPECT_FALSE(iterator2.isValid());
 	
 	// insert keys BEFORE this database (to first db1)
-	LayerTransaction txn1 = db1.createTransaction();
-	transactionUpload(&txn1, test::begin_keys);
-	EXPECT_TRUE(txn1.commit().ok());	
+	std::unique_ptr<TransactionAbstract> txn1 = db1.createTransaction();
+	transactionUpload(txn1, test::begin_keys);
+	EXPECT_TRUE(txn1->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
@@ -487,9 +487,9 @@ TEST_P(TestLayerIterator, prev)
 	EXPECT_FALSE(iterator1.isValid());
 	
 	// insert keys AFTER this database
-	LayerTransaction txn3 = db3.createTransaction();
-	transactionUpload(&txn3, test::end_keys);
-	EXPECT_TRUE(txn3.commit().ok());
+	std::unique_ptr<TransactionAbstract> txn3 = db3.createTransaction();
+	transactionUpload(txn3, test::end_keys);
+	EXPECT_TRUE(txn3->commit());
 	
 	// revalidate iterators after commit of transactions
 	iterator1.reopen();
