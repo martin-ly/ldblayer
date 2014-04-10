@@ -68,7 +68,7 @@ LayerIterator Layer::createIterator()
 
 	LayerIterator iterator = m_db->createIterator();
 	iterator.setLayout(this);
-	
+
 	return iterator;
 }
 

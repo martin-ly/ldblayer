@@ -4,12 +4,13 @@ include_directories(${GTEST_INCLUDE_DIR})
 set(ldb_SRCS_CXX
 	database.cpp
 	database_transaction.cpp
+	database_iterator.cpp
 	layer.cpp
 	layer_transaction.cpp
 	layer_iterator.cpp
+	memory_database.cpp
+	memory_transaction.cpp
 	memory_iterator.cpp
-	database_iterator.cpp
-	
 )
 
 # .h headers
@@ -24,6 +25,8 @@ set(ldb_SRCS_HEADERS
 	layer.h	
 	layer_transaction.h
 	layer_iterator.h
+	memory_database.h
+	memory_transaction.h
 	memory_iterator.h
 )
 

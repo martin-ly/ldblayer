@@ -16,9 +16,9 @@ public:
 	virtual leveldb::Status Put(const std::string& key, const std::string& value) = 0;
 	virtual leveldb::Status Get(const std::string& key, std::string* value) = 0;
 	virtual leveldb::Status Del(const std::string& key) = 0;
-	
+
 	virtual void close() = 0;
-	
+
 	virtual std::unique_ptr<TransactionAbstract> createTransaction() = 0;
 	virtual LayerIterator createIterator() = 0;
 };
