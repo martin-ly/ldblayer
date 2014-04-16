@@ -1,6 +1,7 @@
 #include "memory_database.h"
 #include "layer_iterator.h"
 #include "memory_transaction.h"
+#include "memory_iterator.h"
 
 namespace ldblayer
 {
@@ -36,9 +37,9 @@ void MemoryDatabase::close()
 	buffer.clear();
 }
 
-LayerIterator MemoryDatabase::createIterator()
+std::unique_ptr<IteratorAbstract> MemoryDatabase::createIterator()
 {
-	//return LayerIterator();
+	return std::unique_ptr< IteratorAbstract > { new MemoryIterator(this) };
 }
 
 std::unique_ptr< TransactionAbstract > MemoryDatabase::createTransaction()

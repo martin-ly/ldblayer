@@ -1,61 +1,70 @@
 #include "database_iterator.h"
+#include "database.h"
 
 namespace ldblayer 
 {
 
-DatabaseIterator::DatabaseIterator(Database* db, Layer* layout)
- : iterator(db, layout)
+DatabaseIterator::DatabaseIterator(Database* database)
+: db(database)
 {
+	assert(db);
+	it = db->createRawIterator();
+	
 	seekToFirst();
 }
 
-void DatabaseIterator::seekToFirst() 
-{	
-	iterator.seekToFirst();
-
-	start = false;
-	end = !iterator.isValid();
+DatabaseIterator::~DatabaseIterator()
+{
+	delete it;
 }
 
-void DatabaseIterator::seekToLast() 
+void DatabaseIterator::seekToFirst()
 {
-	iterator.seekToLast();	
-	
-	start = !iterator.isValid();
+	it->SeekToFirst();
+
+	start = false;
+	end = !it->Valid();
+}
+
+void DatabaseIterator::seekToLast()
+{
+	it->SeekToLast();
+
+	start = !it->Valid();
 	end = false;
 }
 
-void DatabaseIterator::seekToBegin() 
+void DatabaseIterator::seekToBegin()
 {
 	start = true;
-	end = false;	
+	end = false;
 }
 
-void DatabaseIterator::seekToEnd() 
+void DatabaseIterator::seekToEnd()
 {
 	start = false;
 	end = true;
 }
 
-void DatabaseIterator::seek(const std::string& key) 
-{	
-	iterator.seek(key);
+void DatabaseIterator::seek(const std::string& key)
+{
+	it->Seek(key);
 	start = false;
-	end = !iterator.isValid();
+	end = !it->Valid();
 }
 
-void DatabaseIterator::next() 
+void DatabaseIterator::next()
 {
 	assert( !end );
 	if (start) {
 		seekToFirst();
 		return;
 	}
-
-	if (iterator.isValid()) {
-		iterator.next();
+	
+	if (it->Valid()) {
+		it->Next();
 		
-		if (!iterator.isValid()) {
+		if (!it->Valid()) {
 			end = true;
 		}
 	} else {
@@ -63,18 +72,18 @@ void DatabaseIterator::next()
 	}
 }
 
-void DatabaseIterator::prev() 
+void DatabaseIterator::prev()
 {
 	assert( !start );
 	if (end) {
 		seekToLast();
 		return;
 	}
-
-	if (iterator.isValid()) {
-		iterator.prev();
-
-		if (!iterator.isValid()) {
+	
+	if (it->Valid()) {
+		it->Prev();
+		
+		if (!it->Valid()) {
 			start = true;
 		}
 	} else {
@@ -84,35 +93,43 @@ void DatabaseIterator::prev()
 
 bool DatabaseIterator::isValid() const 
 {
-	return !(start || end);
+	return (start || end) && it->Valid();
 }
 
 std::string DatabaseIterator::key() const 
 {
-	return iterator.key();
+	assert(it->Valid());
+
+	return it->key().ToString();
 }
 
-std::string DatabaseIterator::value() const 
+std::string DatabaseIterator::value() const
 {
-	return iterator.value();
+	assert(it->Valid());
+
+	return it->value().ToString();
 }
 
-void DatabaseIterator::save()
+bool DatabaseIterator::isBegin() const 
 {
-	if (iterator.isValid()) {
-		savedKey = iterator.key();
-	} else {
-		savedKey.clear();
-	}
+	return start;
 }
 
-void DatabaseIterator::restore()
+bool DatabaseIterator::isEnd() const
 {
-	iterator.reopen();
-
-	if (!savedKey.empty()) {
-		seek(savedKey);
-	}
+	return end;
 }
 
-} // end of namespace
+void DatabaseIterator::reopen()
+{
+	saveKey = it->key();
+
+	delete it;
+	it = db->createRawIterator();
+
+	it->Seek(saveKey);
+	start = false;
+	end = !it->Valid();
+}
+
+}

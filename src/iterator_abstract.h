@@ -20,6 +20,11 @@ public:
 
 	virtual std::string key() const = 0;
 	virtual std::string value() const = 0;
+	
+	virtual bool isBegin() const = 0;
+	virtual bool isEnd() const = 0;
+	
+	virtual void reopen() = 0;
 };
 
 }

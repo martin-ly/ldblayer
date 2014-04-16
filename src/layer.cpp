@@ -62,14 +62,13 @@ std::unique_ptr<TransactionAbstract> Layer::createTransaction()
 	return std::unique_ptr<TransactionAbstract>( new LayerTransaction(this) );
 }
 
-LayerIterator Layer::createIterator()
+std::unique_ptr<IteratorAbstract> Layer::createIterator()
 {
 	assert(m_db);
 
-	LayerIterator iterator = m_db->createIterator();
-	iterator.setLayout(this);
+	LayerIterator* iterator = new LayerIterator { this };
 
-	return iterator;
+	return std::unique_ptr<IteratorAbstract> ( iterator );
 }
 
 } // end of namespace

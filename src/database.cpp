@@ -1,7 +1,9 @@
 #include "database.h"
-#include "layer.h"
 #include "database_transaction.h"
-#include "layer_iterator.h"
+#include "database_iterator.h"
+#include "layer.h"
+#include "layer_db_iterator.h"
+
 #include "defs.h"
 
 #include <assert.h>
@@ -11,7 +13,7 @@ namespace ldblayer
 
 using std::string;
 
-Database::Database()  noexcept
+Database::Database() noexcept
  : db(nullptr)
 {
 }
@@ -106,10 +108,10 @@ std::unique_ptr<TransactionAbstract> Database::createTransaction()
 	return std::unique_ptr<TransactionAbstract> (new DatabaseTransaction(this));
 }
 
-LayerIterator Database::createIterator()
+std::unique_ptr<IteratorAbstract> Database::createIterator()
 {
 	assert(db);
-	return LayerIterator(this);
+	return std::unique_ptr<IteratorAbstract> ( new DatabaseIterator(this) );
 }
 
 leveldb::Iterator* Database::createRawIterator() 
@@ -134,10 +136,10 @@ leveldb::Status Database::destroy()
 void Database::loadPrefixes()
 {
 	Layer layer(this, InternalDatabaseLayer, false);
-	LayerIterator iterator = layer.createIterator();
+	std::unique_ptr<IteratorAbstract> iterator = layer.createIterator();
 	
-	for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
-		prefixs.insert(iterator.value());		
+	for (iterator->seekToFirst(); iterator->isValid(); iterator->next()) {
+		prefixs.insert(iterator->value());		
 	}
 }
 

@@ -1,62 +1,44 @@
-#ifndef LAYER_ITERATOR_H
-#define LAYER_ITERATOR_H
+#ifndef DATABASE_ITERATOR_H
+#define DATABASE_ITERATOR_H
 
-#include <leveldb/iterator.h>
+#include "layer_db_iterator.h"
 
-#include "iterator_abstract.h"
-
-namespace ldblayer
+namespace ldblayer 
 {
 
-class Database;
-class Layer;
-
-/**
- * LayerIterator provide same functionality as leveldb::Iterator,
- * but know about existing prefixes in database and navigates only
- * in prefix database
- * Use this class in situation, where you need the same behaviour as
- * leveldb::Iterator class
- */
-class LayerIterator : public IteratorAbstract
+class LayerIterator : public IteratorAbstract 
 {
 public:
-	LayerIterator(Database* db, Layer* layout = nullptr);
-	~LayerIterator();
-    
+	LayerIterator(Layer* layout);
+
 	virtual void seekToFirst();
 	virtual void seekToLast();
+	virtual void seekToBegin();
+	virtual void seekToEnd();
 	virtual void seek(const std::string& key);
 	virtual void next();
 	virtual void prev();
-	virtual bool isValid() const noexcept { return m_isValid; }
-	
-	/**
-	 * Doesn't supported with this class
-	 * @exception std::exception
-	 */
-	virtual void seekToBegin();
-
-	/**
-	 * Doesn't supported with this class
-	 * @exception std::exception
-	 */
-	virtual void seekToEnd();
+	virtual bool isValid() const;
 	
 	virtual std::string key() const;
 	virtual std::string value() const;
+	virtual void reopen();
+	
+	virtual bool isBegin() const { return start; }
+	virtual bool isEnd() const { return end; }
 
-	void reopen();
+	void save();
+	void restore();
+	
+	void setLayout(Layer* layout);
 
-	std::string operator* () const { return value(); }
-	void setLayout(Layer* layout) { activeLayout = layout; }
-private:    
-	Database* database;
-	Layer* activeLayout;
-	leveldb::Iterator* it;    
-	bool m_isValid;
+private:
+	LayerDbIterator iterator;
+	bool start;
+	bool end;
+	std::string savedKey;
 };
 
-}	// end of namespace
+} // end of namespace
 
-#endif
+#endif // end of include guard

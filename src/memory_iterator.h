@@ -2,22 +2,18 @@
 #define MEMORY_ITERATOR_H
 
 #include "iterator_abstract.h"
+#include "memory_database.h"
 #include <map>
 
 namespace ldblayer
 {
+	
+class MemoryDatabase;
 
 class MemoryIterator : public IteratorAbstract 
 {
 public:
-	using list_t = std::map<std::string, std::string> ;
-	using iterator_t = list_t::const_iterator;
-	
-	MemoryIterator() = delete;
-	MemoryIterator(const list_t* buf);
-	MemoryIterator(const list_t* buf, const iterator_t& iter);
-	
-	MemoryIterator& operator= (iterator_t iter);
+	MemoryIterator(MemoryDatabase* db);
 
 	virtual void seekToFirst();
 	virtual void seekToLast();
@@ -34,10 +30,11 @@ public:
 	
 	virtual std::string key() const;
 	virtual std::string value() const;
-	
+
+	void reopen();
 private:
-	const list_t* buffer;
-	iterator_t iterator;
+	MemoryDatabase* db;
+	MemoryDatabase::list_t::const_iterator iterator;
 	bool start;
 };
 

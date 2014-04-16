@@ -1,46 +1,40 @@
 #include "memory_iterator.h"
+#include "memory_database.h"
 #include <assert.h>
 
 namespace ldblayer 
 {
 
-MemoryIterator::MemoryIterator(const list_t* buf)
-: buffer(buf)
+MemoryIterator::MemoryIterator(MemoryDatabase* database)
+: db(database)
 {
-	assert(buffer);
+	assert(db);
 	seekToFirst();
 }
 
-MemoryIterator::MemoryIterator(const list_t* buf, const iterator_t& iter)
-: buffer(buf),
-  iterator(iter)
-{
-	seekToFirst();
-}
-
-MemoryIterator& MemoryIterator::operator= (iterator_t iter) 
+/*MemoryIterator& MemoryIterator::operator= (iterator_t iter) 
 {
 	iterator = iter;
 	start = false;
 	
 	return *this;
-}
+}*/
 
 void MemoryIterator::seekToFirst() 
 {
-	iterator = buffer->begin();
+	iterator = db->getBuffer().begin();
 	start = false;
 }
 
 void MemoryIterator::seekToLast() 
 {	
-	start = buffer->empty();
-	if (!start) iterator = --buffer->end();
+	start = db->getBuffer().empty();
+	if (!start) iterator = --db->getBuffer().end();
 }
 
 void MemoryIterator::seek(const std::string& key) 
 {
-	iterator = buffer->find(key);
+	iterator = db->getBuffer().lower_bound(key);
 	start = false;
 }
 
@@ -60,7 +54,7 @@ void MemoryIterator::prev()
 	if (isBegin())
 		return;
 	
-	if (iterator == buffer->begin())	
+	if (iterator == db->getBuffer().begin())	
 		seekToBegin();
 	else	
 		--iterator;
@@ -100,19 +94,24 @@ bool MemoryIterator::isBegin() const
 
 bool MemoryIterator::isEnd() const
 {
-	return !isBegin() && iterator == buffer->end();
+	return !isBegin() && iterator == db->getBuffer().end();
 }
 
 void MemoryIterator::seekToBegin() 
 {
 	start = true;
-	iterator = buffer->begin();
+	iterator = db->getBuffer().begin();
 }
 
 void MemoryIterator::seekToEnd() 
 {
-	iterator = buffer->end();
+	iterator = db->getBuffer().end();
 }
 
+void MemoryIterator::reopen() 
+{
+	std::string key = iterator->first;
+	iterator = db->getBuffer().find(key);
+}
 
 }

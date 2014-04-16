@@ -4,10 +4,7 @@ message("${CMAKE_SOURCE_DIR}/src")
 
 # .cxx sources
 set(ldb_tests_SRCS_CXX
-    direct_db.cpp
-    direct_raw.cpp
-    direct_transaction.cpp
-    direct_iterator.cpp
+	basic_operations.cpp
     layer_db.cpp
     layer_raw.cpp
     layer_transaction.cpp
@@ -18,7 +15,7 @@ set(ldb_tests_SRCS_CXX
 
 # .h headers
 set(ldb_tests_SRCS_HEADERS
-    direct_db.h
+	basic_operations.h
     layer_db.h
     db_iterator.h
 )

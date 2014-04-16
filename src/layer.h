@@ -22,7 +22,7 @@ public:
 	virtual leveldb::Status Del(const std::string& key);
 	
 	virtual std::unique_ptr<TransactionAbstract> createTransaction();
-	virtual LayerIterator createIterator();
+	virtual std::unique_ptr<IteratorAbstract> createIterator();
 
 	const std::string& getPrefix() const noexcept { return prefix; }   
 

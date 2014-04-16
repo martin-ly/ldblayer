@@ -1,15 +1,19 @@
 #ifndef DATABASE_ITERATOR_H
 #define DATABASE_ITERATOR_H
 
-#include "layer_iterator.h"
+#include "iterator_abstract.h"
+#include <leveldb/iterator.h>
 
 namespace ldblayer 
 {
 
+class Database;
+
 class DatabaseIterator : public IteratorAbstract 
 {
 public:
-	DatabaseIterator(Database* db, Layer* layout = nullptr);
+	DatabaseIterator(Database* database);
+	~DatabaseIterator();
 
 	virtual void seekToFirst();
 	virtual void seekToLast();
@@ -22,19 +26,20 @@ public:
 	
 	virtual std::string key() const;
 	virtual std::string value() const;
-	
-	bool isBegin() { return start; }
-	bool isEnd() { return end; }
 
-	void save();
-	void restore();
+	virtual bool isBegin() const;
+	virtual bool isEnd() const;
+
+	virtual void reopen();
 private:
-	LayerIterator iterator;
+	Database* db;
+	leveldb::Iterator* it;
+	
 	bool start;
 	bool end;
-	std::string savedKey;
+	leveldb::Slice saveKey;
 };
 
-} // end of namespace
+}
 
-#endif // end of include guard
+#endif

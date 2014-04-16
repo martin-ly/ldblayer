@@ -7,6 +7,7 @@ set(ldb_SRCS_CXX
 	database_iterator.cpp
 	layer.cpp
 	layer_transaction.cpp
+	layer_db_iterator.cpp
 	layer_iterator.cpp
 	memory_database.cpp
 	memory_transaction.cpp
@@ -24,6 +25,7 @@ set(ldb_SRCS_HEADERS
 	database_iterator.h
 	layer.h	
 	layer_transaction.h
+	layer_db_iterator.h
 	layer_iterator.h
 	memory_database.h
 	memory_transaction.h

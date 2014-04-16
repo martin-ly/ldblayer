@@ -36,16 +36,16 @@ public:
 	leveldb::Status registerPrefix(const std::string& layer);
 
 	virtual std::unique_ptr<TransactionAbstract> createTransaction();
-	virtual LayerIterator createIterator();
+	virtual std::unique_ptr<IteratorAbstract> createIterator();
 
 	leveldb::Iterator* createRawIterator();
-	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }	
+	const prefix_list_t& getDbPrefixes() const noexcept { return prefixs; }
 
 	leveldb::DB* getDb() noexcept { return db; }
 
 private:
 	void loadPrefixes();
-	
+
 	leveldb::DB* db;
 	leveldb::ReadOptions readOptions;
 	leveldb::WriteOptions writeOptions;

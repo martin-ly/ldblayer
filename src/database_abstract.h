@@ -8,7 +8,7 @@ namespace ldblayer
 {
 
 class TransactionAbstract;
-class LayerIterator;
+class IteratorAbstract;
 
 class DatabaseAbstract 
 {
@@ -20,7 +20,7 @@ public:
 	virtual void close() = 0;
 
 	virtual std::unique_ptr<TransactionAbstract> createTransaction() = 0;
-	virtual LayerIterator createIterator() = 0;
+	virtual std::unique_ptr<IteratorAbstract> createIterator() = 0;
 };
 
 }	// end of namespace

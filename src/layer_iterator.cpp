@@ -1,233 +1,129 @@
 #include "layer_iterator.h"
-#include "database.h"
 #include "layer.h"
-#include <algorithm>
 
-namespace ldblayer
+namespace ldblayer 
 {
 
-inline bool startsWith(const std::string& prefix, const std::string& toCheck) 
+LayerIterator::LayerIterator(Layer* layout)
+: iterator(layout)
 {
-	return std::mismatch(prefix.begin(), prefix.end(), toCheck.begin()).first == prefix.end();    
-}
-
-LayerIterator::LayerIterator(Database* db, Layer* layout)
-: database(db),
-  activeLayout(layout),
-  m_isValid (false)
-{
-	it = db->createRawIterator();
-}
-
-LayerIterator::~LayerIterator() 
-{    
-	if (it)
-		delete it;
-}
-
-void LayerIterator::next() 
-{   
-	if (!m_isValid) {
-		return;
-	}
-
-	it->Next();
-
-	if (it->Valid()) {
-		if (activeLayout) {
-			const std::string key = it->key().ToString();
-			if (startsWith(activeLayout->getPrefix(), key)) {
-				m_isValid = true;
-				return;
-			}
-		} else {
-			m_isValid = true;
-			return;
-		}
-	}
-
-	m_isValid = false;
-}
-
-void LayerIterator::prev() 
-{
-	if (!m_isValid) {
-		return;
-	}
-
-	it->Prev();
-
-	if (it->Valid()) {
-		if (activeLayout) {
-			const std::string key = it->key().ToString();
-			if (startsWith(activeLayout->getPrefix(), key)) {
-				m_isValid = true;
-				return;
-			}
-		} else {
-			m_isValid = true;
-			return;
-		}
-	}
-
-	m_isValid = false;
+	seekToFirst();
 }
 
 void LayerIterator::seekToFirst() 
-{
-	if (activeLayout) {
-		it->Seek(activeLayout->getPrefix());
+{	
+	iterator.seekToFirst();
 
-		if (!(m_isValid = it->Valid())) 
-			return;
-
-		const std::string key = it->key().ToString();
-		if (activeLayout) {
-			if (startsWith(activeLayout->getPrefix(), key)) {
-				m_isValid = true;
-				return;
-			} else {
-				m_isValid = false;
-				return;
-			}
-		}
-	} else {
-		it->SeekToFirst();
-	}
-
-	m_isValid = it->Valid();
+	start = false;
+	end = !iterator.isValid();
 }
 
 void LayerIterator::seekToLast() 
 {
-	if (activeLayout) {
-		Database::prefix_list_t prefixes = activeLayout->db()->getDbPrefixes();   
-		auto iter = prefixes.find(activeLayout->getPrefix());
-
-		// database should contain current active layout.
-		// if not -> than it is bug and this object was created outside of this database
-		assert (iter != prefixes.end());
-
-		// get next database prefix
-		++iter;
-
-		// check if current prefix is at the end of database
-		if (iter != prefixes.end()) {
-			const std::string searchPrefix = *iter;
-			it->Seek(searchPrefix);
-		} else {
-			// current prefix are last, so just navigate to last key;
-			it->SeekToLast();
-			if (!it->Valid()) {
-				m_isValid = false;
-				return;
-			}
-
-			const std::string& key = it->key().ToString();
-			m_isValid = startsWith(activeLayout->getPrefix(), key);
-			return;
-		}
-
-		if (it->Valid()) {	// we found first key of next database. So, point iter to prev. key
-			it->Prev();
-
-			if (!it->Valid()) {	// no prev. key, so no data
-				m_isValid = false;
-				return;
-			}			
-		} else {	// we have no keys for next database, so just navigate to last database key
-			it->SeekToLast();			
-		}
-
-		if (it->Valid()) {
-			// check, if this key belongs to current layout.
-			// SeekToLast can return key from prev. layout, if this layout doesn't contain any data
-			const std::string& key = it->key().ToString();
-			m_isValid = startsWith(activeLayout->getPrefix(), key);
-			return;
-		}
-		
-	} else {   
-		it->SeekToLast();
-		m_isValid = it->Valid();
-		return;
-	}
-
-	m_isValid = false;
+	iterator.seekToLast();	
+	
+	start = !iterator.isValid();
+	end = false;
 }
 
 void LayerIterator::seekToBegin() 
 {
-	// layer iterator doesn't support this functions
-	throw std::exception();
+	start = true;
+	end = false;	
 }
 
 void LayerIterator::seekToEnd() 
 {
-	// layer iterator doesn't support this functions
-	throw std::exception();
+	start = false;
+	end = true;
 }
 
 void LayerIterator::seek(const std::string& key) 
+{	
+	iterator.seek(key);
+	start = false;
+	end = !iterator.isValid();
+}
+
+void LayerIterator::next() 
 {
-	if (activeLayout) {
-		std::string seek_key = activeLayout->getPrefix();
-		seek_key += key;
-
-		it->Seek(seek_key);
-		if (it->Valid()) {
-			// if no such key, seek will return next lexicographical key
-			const std::string& foundKey = it->key().ToString();
-
-			if (startsWith(activeLayout->getPrefix(), foundKey)) {
-				m_isValid = true;
-				return;
-			}
-		}
-	} else {
-		it->Seek(key);
-		m_isValid = it->Valid();
+	assert( !end );
+	if (start) {
+		seekToFirst();
 		return;
 	}
 
-	m_isValid = false;
+	if (iterator.isValid()) {
+		iterator.next();
+		
+		if (!iterator.isValid()) {
+			end = true;
+		}
+	} else {
+		end = true;
+	}
 }
 
-std::string LayerIterator::key() const { 
-	std::string key;
-
-	if (m_isValid) {
-		assert(it->Valid());		
-		if (activeLayout) {
-			std::string ldb_key = it->key().ToString();
-			key.reserve(ldb_key.size() - activeLayout->getPrefix().size());
-
-			std::copy(ldb_key.begin() + activeLayout->getPrefix().size(), ldb_key.end(), std::back_inserter(key));
-		} else {
-			key = it->key().ToString();
-		}
+void LayerIterator::prev() 
+{
+	assert( !start );
+	if (end) {
+		seekToLast();
+		return;
 	}
 
-	return key;
+	if (iterator.isValid()) {
+		iterator.prev();
+
+		if (!iterator.isValid()) {
+			start = true;
+		}
+	} else {
+		start = true;
+	}
+}
+
+bool LayerIterator::isValid() const 
+{
+	return !(start || end);
+}
+
+std::string LayerIterator::key() const 
+{
+	return iterator.key();
 }
 
 std::string LayerIterator::value() const 
-{ 
-	std::string value;
-	if (m_isValid) {
-		assert(it->Valid());
-		value = it->value().ToString();
-	}
+{
+	return iterator.value();
+}
 
-	return value;
+void LayerIterator::save()
+{
+	if (iterator.isValid()) {
+		savedKey = iterator.key();
+	} else {
+		savedKey.clear();
+	}
+}
+
+void LayerIterator::restore()
+{
+	iterator.reopen();
+
+	if (!savedKey.empty()) {
+		seek(savedKey);
+	}
+}
+
+void LayerIterator::setLayout(Layer* layout)
+{
+	iterator.setLayout(layout);
 }
 
 void LayerIterator::reopen() 
 {
-	if (it) 
-		delete it;
-
-	it = database->createRawIterator();
+	iterator.reopen();
 }
 
 } // end of namespace
